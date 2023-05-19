@@ -1,20 +1,38 @@
 "use client";
+
+import { useRouter } from "next/navigation";
 import Image from "next/image";
-import React, { useState } from "react";
+
+// Types
+import { Items } from "@/types/navbar";
+import Link from "next/link";
 
 const items = {
-  main: ["Home", "Quotes", "Authors"],
-  login: ["Sign in", "Sign up"],
-  profile: ["My profile", "My quotes", "My authors", "Sign out"],
+  main: [
+    { label: "Home", path: "/" },
+    { label: "Quotes", path: "quotes" },
+    { label: "Authors", path: "authors" },
+  ],
+  login: [
+    { label: "Sign in", path: "signin" },
+    { label: "Sign up", path: "signup" },
+  ],
+  profile: [
+    { label: "My profile", path: "profile" },
+    { label: "My quotes", path: "myquotes" },
+    { label: "My authors", path: "myauthors" },
+    { label: "Sign out", path: "signout" },
+  ],
 };
 const { main, login, profile } = items;
 
 export default function Navbar() {
-  const [isLogged, setIsLogged] = useState(false);
+  // const [isLogged, setIsLogged] = useState(false);
+  const isLogged = false;
 
   return (
-    <nav className="flex items-center justify-evenly border-4">
-      <Image src="/logo.png" alt="/" width="50" height="50" />
+    <nav className="flex justify-evenly border-4">
+      <Image src="/logo.png" alt="/" width="50" height="50" className="my-2 cursor-pointer" />
 
       <Items items={main} />
       <Items items={isLogged ? profile : login} />
@@ -22,11 +40,13 @@ export default function Navbar() {
   );
 }
 
-function Items({ items }: { items: string[] }) {
+function Items({ items }: { items: Items[] }) {
   return (
-    <ul>
+    <ul className="flex gap-x-2">
       {items.map((item, index) => (
-        <li key={index}>{item}</li>
+        <li key={index} className="flex items-center p-2 cursor-pointer">
+          <Link href={item.path}>{item.label}</Link>
+        </li>
       ))}
     </ul>
   );

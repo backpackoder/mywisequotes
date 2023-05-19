@@ -1,42 +1,36 @@
+// Types
+import { Params } from "@/types/params";
+import { Quote } from "@/types/API";
+
+// Hooks
+import { useGetData } from "@/hooks/getData";
+
+// Commons
 import { API_URL } from "@/commons/commons";
-
-type Quote = {
-  q: string;
-  a: string;
-}[];
-
-async function getData() {
-  const res = await fetch(API_URL, { next: { revalidate: 2 } });
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
-  }
-
-  return res.json();
-}
+import Link from "next/link";
 
 export default async function RandomQuote() {
-  const data: Quote = await getData();
-  data && console.log("data", data && data);
+  const params: Params = {
+    url: API_URL.RANDOM_SINGLE,
 
-  console.log("oh", data[0].q);
-  console.log("eh");
+    maxLength: 1000,
+    minLength: 1,
+    tags: "",
+    author: "",
+  };
+
+  const data: Quote = await useGetData(params);
 
   return (
     data && (
-      <div>
-        RandomQuote
-        <div>
-          {data.map((d, index) => {
-            return (
-              <p key={index}>
-                {index}: {d.q}
-                <br />- {d.a}
-              </p>
-            );
-          })}
-        </div>
-      </div>
+      <section className="p-2 border-2">
+        <p>
+          {`"`}
+          {data.content}
+          {`"`}
+        </p>
+        <Link href={`/authors/${data._id}/${data.authorSlug}`}>- {data.author}</Link>
+      </section>
     )
   );
 }
