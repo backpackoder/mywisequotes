@@ -10,7 +10,7 @@ import { useGetData } from "@/hooks/getData";
 // Commons
 import { API_URL } from "@/commons/commons";
 
-export default async function Author({ params }: { params: { _id: string; slug: string } }) {
+export default async function Author({ params }: { params: { slug: string } }) {
   const { slug } = params;
 
   const authorsParams: Params = {
@@ -30,12 +30,12 @@ export default async function Author({ params }: { params: { _id: string; slug: 
     <section>
       <h2>{author.results[0].name}</h2>
       <p>{author.results[0].description}</p>
-      <a href={author.results[0].link} target="_blank" className="text-blue-500">
-        <small>Read more on Wikipedia</small>
-      </a>
 
       <h3>Biography:</h3>
       <p>{author.results[0].bio}</p>
+      <a href={author.results[0].link} target="_blank" className="text-blue-500">
+        <small>Read more on Wikipedia</small>
+      </a>
 
       <h3>Quotes ({author.results[0].quoteCount}):</h3>
       {quotes.results.map((result, index) => {

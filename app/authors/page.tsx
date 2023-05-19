@@ -36,7 +36,7 @@ export default async function Authors() {
           {data.results.map((result, index) => {
             return (
               result.quoteCount > 0 && (
-                <Link key={index} href={`/authors/${result._id}/${result.slug}`}>
+                <Link key={index} href={`/authors/${result.slug}`}>
                   <p key={index}>
                     {result.name} ({result.quoteCount} quotes)
                   </p>

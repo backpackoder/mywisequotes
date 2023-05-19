@@ -9,6 +9,7 @@ import { useGetData } from "@/hooks/getData";
 
 // Commons
 import { API_URL } from "@/commons/commons";
+import Link from "next/link";
 
 export default async function Quotes() {
   const params: Params = {
@@ -39,12 +40,17 @@ export default async function Quotes() {
         <div className="flex flex-col gap-2">
           {data.results.map((result, index) => {
             return (
-              <p key={index}>
-                {`"`}
-                {result.content}
-                {`"`}
-                <br />- {result.author}
-              </p>
+              <div
+                key={index}
+                className="flex flex-col items-center p-4 bg-[#04f7ff4b] border-1 border-black rounded-lg"
+              >
+                <p>
+                  {`"`}
+                  {result.content}
+                  {`"`}
+                </p>
+                <Link href={`/authors/${result.authorSlug}`}>- {result.author}</Link>
+              </div>
             );
           })}
         </div>

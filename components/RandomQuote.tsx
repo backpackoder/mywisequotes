@@ -29,7 +29,7 @@ export default async function RandomQuote() {
           {data.content}
           {`"`}
         </p>
-        <Link href={`/authors/${data._id}/${data.authorSlug}`}>- {data.author}</Link>
+        <Link href={`/authors/${data.authorSlug}`}>- {data.author}</Link>
       </section>
     )
   );
