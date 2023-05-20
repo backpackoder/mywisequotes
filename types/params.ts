@@ -13,11 +13,13 @@ export type Params = {
   page?: number;
   slug?: string;
 
-  query?: string;
+  query?: string | null;
   fields?: string;
   fuzzyMaxEdits?: number;
   fuzzyMaxExpansions?: number;
 
   autocomplete?: boolean;
   matchThreshold?: number;
+
+  _id?: string;
 };

@@ -1,17 +1,28 @@
-import React from "react";
+"use client";
+
+import { useRouter } from "next/navigation";
+import React, { useEffect, useReducer, useState } from "react";
+import { FaHeart } from "react-icons/fa";
+
+// Components
+import Navbar from "@/components/Navbar";
+import Pagination from "@/components/Pagination";
 
 // Types
 import { Quotes } from "@/types/API";
 import { Params } from "@/types/params";
 
 // Hooks
-import { useGetData } from "@/hooks/getData";
+import { getData } from "@/utils/getData";
 
 // Commons
 import { API_URL } from "@/commons/commons";
-import Link from "next/link";
+import { QuoteItem } from "@/components/QuoteItem";
 
-export default async function Quotes() {
+export default function Quotes() {
+  const Router = useRouter();
+  const [data, setData] = useState<Quotes | null>(null);
+
   const params: Params = {
     url: API_URL.QUOTES,
     maxLength: 1000,
@@ -24,36 +35,34 @@ export default async function Quotes() {
     page: 1,
   };
 
-  const data: Quotes = await useGetData(params);
-  console.log("data.totalCount", data.totalCount);
+  const [state, dispatch] = useReducer(reducer, params);
+
+  function reducer(state: any, action: any) {
+    return { ...state, [action.type]: action.payload };
+  }
+
+  useEffect(() => {
+    async function fetchData() {
+      const data: Quotes = await getData(state);
+      setData(data);
+    }
+    fetchData();
+  }, [state]);
 
   return (
     data && (
       <section className="flex flex-col gap-2">
-        <div className="flex justify-center gap-4 p-4 border-2 border-black">
-          <div>count: {data.count}</div>
-          <div>totalCount: {data.totalCount}</div>
-          <div>page: {data.page}</div>
-          <div>totalPages: {data.totalPages}</div>
-        </div>
+        <Navbar type="quotes" data={data} />
+
+        <Pagination data={data} state={state} dispatch={dispatch} />
 
         <div className="flex flex-col gap-2">
           {data.results.map((result, index) => {
-            return (
-              <div
-                key={index}
-                className="flex flex-col items-center p-4 bg-[#04f7ff4b] border-1 border-black rounded-lg"
-              >
-                <p>
-                  {`"`}
-                  {result.content}
-                  {`"`}
-                </p>
-                <Link href={`/authors/${result.authorSlug}`}>- {result.author}</Link>
-              </div>
-            );
+            return <QuoteItem key={index} data={result} />;
           })}
         </div>
+
+        <Pagination data={data} state={state} dispatch={dispatch} />
       </section>
     )
   );

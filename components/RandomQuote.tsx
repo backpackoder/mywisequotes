@@ -1,36 +1,25 @@
+// Components
+import { QuoteItem } from "./QuoteItem";
+
 // Types
 import { Params } from "@/types/params";
 import { Quote } from "@/types/API";
 
 // Hooks
-import { useGetData } from "@/hooks/getData";
+import { getData } from "@/utils/getData";
 
 // Commons
 import { API_URL } from "@/commons/commons";
-import Link from "next/link";
 
 export default async function RandomQuote() {
   const params: Params = {
-    url: API_URL.RANDOM_SINGLE,
+    url: API_URL.QUOTES_RANDOM,
 
-    maxLength: 1000,
-    minLength: 1,
-    tags: "",
-    author: "",
+    limit: 1,
   };
 
-  const data: Quote = await useGetData(params);
+  const data: Quote[] = await getData(params);
+  console.log("data", data);
 
-  return (
-    data && (
-      <section className="p-2 border-2">
-        <p>
-          {`"`}
-          {data.content}
-          {`"`}
-        </p>
-        <Link href={`/authors/${data.authorSlug}`}>- {data.author}</Link>
-      </section>
-    )
-  );
+  return data && <QuoteItem data={data[0]} />;
 }

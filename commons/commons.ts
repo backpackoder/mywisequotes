@@ -7,12 +7,9 @@ export const TITLE = "My wise quotes";
 // API
 export const API_URL_MAIN = "https://api.quotable.io";
 
-export const API_URL: API_URL_TYPE = {
-  // Returns a single random quote from the database
-  RANDOM_SINGLE: `${API_URL_MAIN}/random`,
-
+export const API_URL = {
   // Get one or more random quotes from the database. This method supports several filters that can be used to get random quotes with specific properties (ie tags, quote length, etc.)
-  RANDOM_MULTIPLE: `${API_URL_MAIN}/quotes/random`,
+  QUOTES_RANDOM: `${API_URL_MAIN}/quotes/random`,
 
   // Get all quotes matching a given query. By default, this will return a paginated list of all quotes, sorted by _id. Quotes can also be filter by author, tag, and length.
   QUOTES: `${API_URL_MAIN}/quotes`,

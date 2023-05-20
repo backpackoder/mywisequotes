@@ -1,53 +1,21 @@
-"use client";
+import React from "react";
 
-import { useRouter } from "next/navigation";
-import Image from "next/image";
+// Components
+import Searchbar from "./Searchbar";
 
 // Types
-import { Items } from "@/types/navbar";
-import Link from "next/link";
+import { NavbarProps } from "@/types/props";
 
-const items = {
-  main: [
-    { label: "Home", path: "/" },
-    { label: "Quotes", path: "quotes" },
-    { label: "Authors", path: "authors" },
-  ],
-  login: [
-    { label: "Sign in", path: "signin" },
-    { label: "Sign up", path: "signup" },
-  ],
-  profile: [
-    { label: "My profile", path: "profile" },
-    { label: "My quotes", path: "myquotes" },
-    { label: "My authors", path: "myauthors" },
-    { label: "Sign out", path: "signout" },
-  ],
-};
-const { main, login, profile } = items;
-
-export default function Navbar() {
-  // const [isLogged, setIsLogged] = useState(false);
-  const isLogged = false;
-
+export default function Navbar({ type, data }: NavbarProps) {
   return (
-    <nav className="flex justify-evenly border-4">
-      <Image src="/logo.png" alt="/" width="50" height="50" className="my-2 cursor-pointer" />
+    <div className="flex justify-center gap-4 p-4 border-2 border-black">
+      <div>count: {data.count}</div>
+      <div>totalCount: {data.totalCount}</div>
+      <div>page: {data.page}</div>
+      <div>totalPages: {data.totalPages}</div>
+      <div>lastItemIndex: {data.lastItemIndex}</div>
 
-      <Items items={main} />
-      <Items items={isLogged ? profile : login} />
-    </nav>
-  );
-}
-
-function Items({ items }: { items: Items[] }) {
-  return (
-    <ul className="flex gap-x-2">
-      {items.map((item, index) => (
-        <li key={index} className="flex items-center p-2 cursor-pointer">
-          <Link href={item.path}>{item.label}</Link>
-        </li>
-      ))}
-    </ul>
+      <Searchbar type={type} />
+    </div>
   );
 }

@@ -1,14 +1,16 @@
+import Link from "next/link";
 import React from "react";
 
 // Types
 import { Author, Authors, Quotes } from "@/types/API";
 import { Params } from "@/types/params";
 
-// Hooks
-import { useGetData } from "@/hooks/getData";
+// Utils
+import { getData } from "@/utils/getData";
 
 // Commons
 import { API_URL } from "@/commons/commons";
+import { QuoteItem } from "@/components/QuoteItem";
 
 export default async function Author({ params }: { params: { slug: string } }) {
   const { slug } = params;
@@ -23,8 +25,8 @@ export default async function Author({ params }: { params: { slug: string } }) {
     author: slug,
   };
 
-  const author: Authors = await useGetData(authorsParams);
-  const quotes: Quotes = await useGetData(quotesParams);
+  const author: Authors = await getData(authorsParams);
+  const quotes: Quotes = await getData(quotesParams);
 
   return author.results.length === 1 && quotes ? (
     <section>
@@ -38,18 +40,11 @@ export default async function Author({ params }: { params: { slug: string } }) {
       </a>
 
       <h3>Quotes ({author.results[0].quoteCount}):</h3>
-      {quotes.results.map((result, index) => {
-        return (
-          <div key={index}>
-            <p>
-              {`"`}
-              {result.content}
-              {`"`}
-            </p>
-            <p>- {result.author}</p>
-          </div>
-        );
-      })}
+      <div className="flex flex-col gap-4">
+        {quotes.results.map((result, index) => {
+          return <QuoteItem key={index} data={result} />;
+        })}
+      </div>
     </section>
   ) : (
     <MoreThanOneResult author={author} />

@@ -5,7 +5,7 @@ import { Params } from "@/types/params";
 import { getURL } from "@/utils/getURL";
 import axios from "axios";
 
-export async function useGetData(params: Params) {
+export async function getData(params: Params) {
   const res = await axios.get(getURL(params));
 
   if (!res) {
