@@ -19,7 +19,6 @@ export default async function RandomQuote() {
   };
 
   const data: Quote[] = await getData(params);
-  console.log("data", data);
 
   return data && <QuoteItem data={data[0]} />;
 }

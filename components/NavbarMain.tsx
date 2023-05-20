@@ -11,14 +11,14 @@ const items = {
     { label: "Authors", path: "authors" },
   ],
   login: [
-    { label: "Sign in", path: "signIn" },
+    { label: "Log in", path: "/api/auth/login" },
     { label: "Sign up", path: "signUp" },
   ],
   profile: [
     { label: "My profile", path: "profile" },
     { label: "My quotes", path: "myquotes" },
     { label: "My authors", path: "myauthors" },
-    { label: "Sign out", path: "/" },
+    { label: "Log out", path: "/api/auth/logout" },
   ],
 };
 const { main, login, profile } = items;
