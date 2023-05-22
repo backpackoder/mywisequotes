@@ -1,8 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import React, { useEffect, useReducer, useState } from "react";
-import { FaHeart } from "react-icons/fa";
 
 // Components
 import Navbar from "@/components/Navbar";
@@ -20,7 +18,6 @@ import { API_URL } from "@/commons/commons";
 import { QuoteItem } from "@/components/QuoteItem";
 
 export default function Quotes() {
-  const Router = useRouter();
   const [data, setData] = useState<Quotes | null>(null);
 
   const params: Params = {

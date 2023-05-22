@@ -1,5 +1,6 @@
 // Types
 import { Authors, Quotes } from "./API";
+import { Items } from "./navbar";
 
 // AUTHORS
 export type InputAuthorProps = {
@@ -11,6 +12,10 @@ export type InputAuthorProps = {
 export type NavbarProps = {
   type: string;
   data: Quotes | Authors;
+};
+
+export type ItemsProps = {
+  items: Items[];
 };
 
 // NAVIGATION
