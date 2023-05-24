@@ -1,19 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { signIn, signOut, useSession } from "next-auth/react";
 
 // Components
+import Logo from "./Logo";
 import { Items } from "@/types/navbar";
 
 // Types
-import { ItemsProps } from "@/types/props";
+import { NavbarItemsProps } from "@/types/props";
 
 export default function NavbarMain() {
-  const { data: session } = useSession();
-  console.log("session?.user", session?.user);
+  const isLogged = false;
 
   const items: {
     [key: string]: Items[];
@@ -24,31 +22,29 @@ export default function NavbarMain() {
       { label: "Authors", path: "/authors" },
     ],
     login: [
-      { label: "Log in", path: "/api/auth/login", func: signIn() },
-      { label: "Sign up", path: "/signUp", func: signIn() },
+      { label: "Log in", path: "/api/auth/login", func: undefined },
+      { label: "Sign up", path: "/signUp", func: undefined },
     ],
     profile: [
       { label: "My profile", path: "/profile" },
       { label: "My quotes", path: "/myquotes" },
       { label: "My authors", path: "/myauthors" },
-      { label: "Log out", path: "/api/auth/logout", func: signOut() },
+      { label: "Log out", path: "/api/auth/logout", func: undefined },
     ],
   };
   const { main, login, profile } = items;
 
   return (
-    <nav className="flex justify-evenly border-4">
-      <Link href="/">
-        <Image src="/logo.png" alt="/" width="50" height="50" className="my-2 cursor-pointer" />
-      </Link>
+    <nav className="flex flex-wrap justify-evenly p-2 border-4">
+      <Logo />
 
       <NavBarItem items={main} />
-      <NavBarItem items={session && session.user ? profile : login} />
+      <NavBarItem items={isLogged ? profile : login} />
     </nav>
   );
 }
 
-function NavBarItem({ items }: ItemsProps) {
+function NavBarItem({ items }: NavbarItemsProps) {
   const pathname = usePathname();
 
   return (
@@ -60,7 +56,7 @@ function NavBarItem({ items }: ItemsProps) {
           <li key={index} className="flex items-center p-2 cursor-pointer">
             <Link
               href={item.path}
-              className={isActive ? "text-blue-500" : "text-black"}
+              className={`${isActive ? "text-blue-500" : "text-black"} text-center`}
               onClick={() => item.func}
             >
               {item.label}

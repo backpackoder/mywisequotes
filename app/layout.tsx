@@ -2,7 +2,6 @@ import "./globals.css";
 import { Inter } from "next/font/google";
 
 // Components
-import Providers from "@/components/Providers";
 import NavbarMain from "@/components/NavbarMain";
 import Footer from "@/components/Footer";
 
@@ -17,11 +16,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Providers>
-          <NavbarMain />
-          {children}
-          <Footer />
-        </Providers>
+        <NavbarMain />
+        {children}
+        <Footer />
       </body>
     </html>
   );

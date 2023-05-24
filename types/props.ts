@@ -1,11 +1,10 @@
 // Types
-import { Authors, Quotes } from "./API";
+import { Author, Authors, Quotes } from "./API";
 import { Items } from "./navbar";
 
-// AUTHORS
-export type InputAuthorProps = {
-  searchParamsState: any;
-  searchParamsDispatch: React.Dispatch<React.SetStateAction<any>>;
+// PARTS
+export type PartsItemProps = {
+  theme: "Quotes" | "Authors";
 };
 
 // NAVBAR
@@ -14,12 +13,12 @@ export type NavbarProps = {
   data: Quotes | Authors;
 };
 
-export type ItemsProps = {
+export type NavbarItemsProps = {
   items: Items[];
 };
 
 // NAVIGATION
-export type NavigationProps = {
+export type PaginationProps = {
   data: Quotes | Authors;
   state: any;
   dispatch: React.Dispatch<any>;
@@ -31,4 +30,17 @@ export type GoToPageItemProps = {
   dispatch: React.Dispatch<any>;
   direction: string;
   number: number;
+};
+
+// AUTHORS
+export type InputAuthorProps = {
+  searchParamsState: any;
+  searchParamsDispatch: React.Dispatch<React.SetStateAction<any>>;
+};
+
+export type AuthorImgProps = {
+  author: {
+    name: string;
+  };
+  width?: number;
 };

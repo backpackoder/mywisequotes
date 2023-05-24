@@ -2,9 +2,9 @@ import React from "react";
 import { FaArrowCircleLeft, FaArrowCircleRight } from "react-icons/fa";
 
 // Props
-import { GoToPageItemProps, NavigationProps } from "@/types/props";
+import { GoToPageItemProps, PaginationProps } from "@/types/props";
 
-export default function Pagination({ data, state, dispatch }: NavigationProps) {
+export default function Pagination({ data, state, dispatch }: PaginationProps) {
   function prevPage() {
     dispatch({ type: "page", payload: state.page === 1 ? data?.totalPages : state.page - 1 });
   }

@@ -1,20 +1,18 @@
+"use client";
+
+import { Authors } from "@/types/API";
+import React, { useEffect, useReducer, useState } from "react";
+import Navbar from "./Navbar";
+import Pagination from "./Pagination";
 import Link from "next/link";
-
-// Components
-import Navbar from "@/components/Navbar";
-import AuthorImg from "@/components/AuthorImg";
-
-// Types
+import AuthorImg from "./AuthorImg";
+import { API_URL } from "@/commons/commons";
 import { Params } from "@/types/params";
-
-// Utils
 import { getData } from "@/utils/getData";
 
-// Commons
-import { API_URL } from "@/commons/commons";
-import { Authors } from "@/types/API";
+export function Testing() {
+  const [data, setData] = useState<Authors | null>(null);
 
-export default async function Authors() {
   const params: Params = {
     url: API_URL.AUTHORS,
 
@@ -25,13 +23,26 @@ export default async function Authors() {
     page: 1,
   };
 
-  const data: Authors = await getData(params);
+  const [state, dispatch] = useReducer(reducer, params);
+  console.log("state", state);
 
-  return (
-    <section>
-      {/* <Testing /> */}
+  function reducer(state: any, action: any) {
+    return { ...state, [action.type]: action.payload };
+  }
 
+  useEffect(() => {
+    async function fetchData() {
+      const data: Authors = await getData(state);
+      setData(data);
+    }
+    fetchData();
+  }, [state]);
+
+  return data ? (
+    <>
       <Navbar type="authors" data={data} />
+
+      <Pagination data={data} state={state} dispatch={dispatch} />
 
       <article className="flex flex-wrap items-stretch justify-center gap-8 my-2">
         {data.results.map((result, index) => {
@@ -49,7 +60,7 @@ export default async function Authors() {
 
               <div className="flex items-center w-4/5 h-full rounded-lg overflow-hidden mt-2">
                 {/* @ts-expect-error Async Server Component */}
-                <AuthorImg author={{ name: result.name }} />
+                {/* <AuthorImg author={{ name: result.name }} /> */}
               </div>
 
               <Link
@@ -62,6 +73,10 @@ export default async function Authors() {
           );
         })}
       </article>
-    </section>
+
+      <Pagination data={data} state={state} dispatch={dispatch} />
+    </>
+  ) : (
+    <p>Loading...</p>
   );
 }
