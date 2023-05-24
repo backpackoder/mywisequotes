@@ -59,7 +59,6 @@ export function Testing() {
               </small>
 
               <div className="flex items-center w-4/5 h-full rounded-lg overflow-hidden mt-2">
-                {/* @ts-expect-error Async Server Component */}
                 {/* <AuthorImg author={{ name: result.name }} /> */}
               </div>
 
