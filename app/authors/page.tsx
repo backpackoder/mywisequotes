@@ -29,8 +29,6 @@ export default async function Authors() {
 
   return (
     <section>
-      {/* <Testing /> */}
-
       <Navbar type="authors" data={data} />
 
       <article className="flex flex-wrap items-stretch justify-center gap-8 my-2">
