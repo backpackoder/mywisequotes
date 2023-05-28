@@ -1,5 +1,5 @@
 // Types
-import { Author, Authors, Quotes } from "./API";
+import { Authors, Quote, Quotes } from "./API";
 import { Items } from "./navbar";
 
 // PARTS
@@ -43,4 +43,9 @@ export type AuthorImgProps = {
     name: string;
   };
   width?: number;
+};
+
+// QUOTES
+export type QuoteItemProps = {
+  quote: Quote;
 };

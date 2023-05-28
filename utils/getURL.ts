@@ -1,9 +1,6 @@
 // Types
 import { Params } from "@/types/params";
 
-// Utils
-import { urlParams } from "./urlParams";
-
 // Commons
 import { API_URL } from "@/commons/commons";
 
@@ -13,4 +10,12 @@ export function getURL(params: Params) {
     .find((value) => value === params.url);
 
   return `${url}?${urlParams(params)}`;
+}
+
+function urlParams(params: Params) {
+  const url = Object.entries(params)
+    .map(([key, value]) => (key === "url" ? null : `${key}=${value}`))
+    .join("&");
+
+  return url;
 }

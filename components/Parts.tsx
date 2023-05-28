@@ -16,7 +16,7 @@ export default function Parts() {
 
 function PartsItem({ theme }: PartsItemProps) {
   return (
-    <div className="flex flex-col items-center justify-center gap-2 p-4 border-2 rounded-lg">
+    <div className="group flex flex-col items-center justify-center gap-2 bg-[#e6e6e6] p-4 border-2 rounded-lg shadow-xl">
       <h2>{theme}</h2>
       <p>Discover {theme.toLowerCase()} from our community.</p>
 
@@ -26,7 +26,7 @@ function PartsItem({ theme }: PartsItemProps) {
           alt={theme}
           fill={true}
           sizes="100%"
-          className="object-cover rounded-lg cursor-pointer hover:scale-110"
+          className="object-cover rounded-lg duration-300 group-hover:scale-110"
         />
       </div>
 

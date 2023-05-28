@@ -3,15 +3,13 @@ import React from "react";
 
 // Components
 import { FavIcon } from "./FavIcon";
-import { Quote } from "@/types/API";
 import AuthorImg from "./AuthorImg";
 
-export type QuoteItemProps = {
-  quote: Quote;
-};
+// Types
+import { QuoteItemProps } from "@/types/props";
 
 export async function QuoteItem({ quote }: QuoteItemProps) {
-  return (
+  return quote ? (
     <div
       className="relative flex flex-col items-center gap-2 bg-[#04f7ff4b] italic p-8 border-1 border-black rounded-lg
       duration-300 hover:bg-[#04f7ff93]"
@@ -29,5 +27,5 @@ export async function QuoteItem({ quote }: QuoteItemProps) {
         - {quote.author}
       </Link>
     </div>
-  );
+  ) : null;
 }
