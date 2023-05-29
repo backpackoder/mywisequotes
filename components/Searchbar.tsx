@@ -3,15 +3,17 @@
 import Link from "next/link";
 import React, { useEffect, useMemo, useReducer, useState } from "react";
 
+// Components
+import { NoResultsFound } from "./NoResultsFound";
+
 // Types
 import { Authors, Quotes } from "@/types/API";
 import { Params } from "@/types/params";
+import { SearchbarProps } from "@/types/searchbar";
+import { DispatchQuotesAndAuthors } from "@/types/authors";
 
 // Utils
 import { getData } from "@/utils/getData";
-
-// Types
-import { SearchbarProps } from "@/types/searchbar";
 
 // Commons
 import { API_URL } from "@/commons/commons";
@@ -33,30 +35,20 @@ export default function Searchbar({ type }: SearchbarProps) {
     }
   }, [type]);
 
-  const params: Params =
-    type === "quotes"
-      ? {
-          url,
+  const params: Params = {
+    url,
 
-          query: "",
-          fields: "quote,author",
-        }
-      : {
-          url,
-
-          query: "",
-        };
+    query: "",
+    fields: type === "quotes" ? "quote,author" : undefined,
+  };
 
   const [state, dispatch] = useReducer(reducer, params);
 
-  function reducer(state: any, action: any) {
-    switch (action.type) {
-      case "query":
-        return { ...state, query: action.payload };
-
-      default:
-        throw new Error(`Invalid action type at SearchAuthor: ${(action.type, action.payload)}}`);
-    }
+  function reducer(state: Params, action: DispatchQuotesAndAuthors) {
+    return {
+      ...state,
+      [action.type]: action.payload,
+    };
   }
 
   function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -78,47 +70,64 @@ export default function Searchbar({ type }: SearchbarProps) {
   }, [params.query, state, type]);
 
   return (
-    <div className="relative">
+    <div className="relative flex flex-col items-center justify-between gap-2 p-2 z-10">
+      <label htmlFor="search">Search</label>
       <input
         type="text"
-        id="text"
+        id="search"
+        name="search"
         placeholder="Search..."
+        autoComplete="off"
         value={state.query ?? ""}
-        className="border-2"
+        className=" max-h-12 p-2 border-2 border-black border-opacity-50 rounded-xl"
         onChange={(e) => handleInputChange(e)}
       />
 
-      {state.query !== "" &&
-        ((searchQuote && searchQuote.results.length > 0) ||
-          (searchAuthor && searchAuthor.results.length > 0)) && (
-          <div className="absolute flex flex-col gap-2 bg-gray-200 p-2 w-full border-2">
-            {searchQuote
-              ? searchQuote.results.map((result, index) => {
-                  return (
-                    <div key={index}>
-                      <Link href={`/${type}/${result._id}`}>{result.content} </Link>
-                      <Link href={`/authors/${result.authorSlug}`}>
-                        <small>({result.author})</small>
-                      </Link>
-                    </div>
-                  );
-                })
-              : null}
-
-            {searchAuthor
-              ? searchAuthor.results.map((result, index) => {
-                  return (
-                    <Link key={index} href={`/${type}/${result.slug}`}>
-                      {result.name}{" "}
-                      <small>
-                        ({result.quoteCount} {result.quoteCount === 1 ? "quote" : "quotes"})
-                      </small>
-                    </Link>
-                  );
-                })
-              : null}
-          </div>
-        )}
+      {state.query !== "" && (
+        <div className="absolute top-full flex flex-col gap-2 bg-sky-200 p-2 w-full border-2">
+          {searchQuote && <SearchQuote type={type} searchQuote={searchQuote} />}
+          {searchAuthor && <SearchAuthor type={type} searchAuthor={searchAuthor} />}
+        </div>
+      )}
     </div>
+  );
+}
+
+function SearchQuote({ type, searchQuote }: { type: string; searchQuote: Quotes }) {
+  console.log("searchQuote.results.length", searchQuote.results.length);
+  return searchQuote.results.length > 0 ? (
+    <>
+      {searchQuote.results.map((result, index) => {
+        return (
+          <div key={index}>
+            <Link href={`/${type}/${result._id}`}>{result.content} </Link>
+            <Link href={`/authors/${result.authorSlug}`}>
+              <small>({result.author})</small>
+            </Link>
+          </div>
+        );
+      })}
+    </>
+  ) : (
+    <NoResultsFound type={type} />
+  );
+}
+
+function SearchAuthor({ type, searchAuthor }: { type: string; searchAuthor: Authors }) {
+  return searchAuthor.results.length > 0 ? (
+    <>
+      {searchAuthor.results.map((result, index) => {
+        return (
+          <Link key={index} href={`/${type}/${result.slug}`}>
+            {result.name}{" "}
+            <small>
+              ({result.quoteCount} {result.quoteCount === 1 ? "quote" : "quotes"})
+            </small>
+          </Link>
+        );
+      })}
+    </>
+  ) : (
+    <NoResultsFound type={type} />
   );
 }

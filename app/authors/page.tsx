@@ -1,6 +1,7 @@
-// "use client";
+"use client";
 
 import Link from "next/link";
+import { useEffect, useReducer, useState } from "react";
 
 // Components
 import Navbar from "@/components/Navbar";
@@ -9,34 +10,49 @@ import AuthorImg from "@/components/AuthorImg";
 
 // Types
 import { Params } from "@/types/params";
+import { Authors } from "@/types/API";
+import { DispatchQuotesAndAuthors } from "@/types/authors";
 
 // Utils
 import { getData } from "@/utils/getData";
 
 // Commons
 import { API_URL } from "@/commons/commons";
-import { Authors } from "@/types/API";
 
-export default async function Authors() {
+export default function Authors() {
   const params: Params = {
     url: API_URL.AUTHORS,
 
+    page: 1,
+    limit: 20,
     slug: "",
     sortBy: "",
-    order: "",
-    limit: 20,
-    page: 1,
+    order: "asc",
+    tags: "",
   };
 
-  const authors: Authors = await getData(params);
+  const [authors, setAuthors] = useState<Authors | null>(null);
 
-  return (
-    <section>
-      <Navbar type="authors" data={authors} />
+  const [state, dispatch] = useReducer(reducer, params);
 
-      {/* <Pagination data={data} state={0} dispatch={() => {}} /> */}
+  function reducer(state: Params, action: DispatchQuotesAndAuthors) {
+    return {
+      ...state,
+      [action.type]: action.payload,
+    };
+  }
 
-      <article className="flex flex-wrap items-stretch justify-center gap-8 my-2">
+  useEffect(() => {
+    getData(state).then((data) => setAuthors(data));
+  }, [state]);
+
+  return authors ? (
+    <section className="flex flex-col gap-2">
+      <Navbar type="authors" totalCount={authors.totalCount} dispatch={dispatch} />
+
+      <Pagination data={authors} state={state} dispatch={dispatch} />
+
+      <article className="flex flex-wrap justify-center gap-8">
         {authors.results.map((author, index) => {
           return (
             <div
@@ -51,8 +67,7 @@ export default async function Authors() {
               </small>
 
               <div className="flex items-center w-4/5 h-full rounded-lg overflow-hidden mt-2">
-                {/* @ts-expect-error Async Server Component */}
-                <AuthorImg author={{ name: author.name }} />
+                <AuthorImg author={author.name} />
               </div>
 
               <Link
@@ -65,6 +80,8 @@ export default async function Authors() {
           );
         })}
       </article>
+
+      <Pagination data={authors} state={state} dispatch={dispatch} />
     </section>
-  );
+  ) : null;
 }

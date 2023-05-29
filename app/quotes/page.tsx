@@ -1,4 +1,4 @@
-// "use client";
+"use client";
 
 import React, { useEffect, useReducer, useState } from "react";
 
@@ -10,15 +10,17 @@ import { QuoteItem } from "@/components/QuoteItem";
 // Types
 import { Quotes } from "@/types/API";
 import { Params } from "@/types/params";
+import { DispatchQuotesAndAuthors } from "@/types/authors";
 
 // Hooks
 import { getData } from "@/utils/getData";
 
 // Commons
 import { API_URL } from "@/commons/commons";
+import { NoResultsFound } from "@/components/NoResultsFound";
 
-export default async function Quotes() {
-  // const [data, setData] = useState<Quotes | null>(null);
+export default function Quotes() {
+  const [quotes, setQuotes] = useState<Quotes | null>(null);
 
   const params: Params = {
     url: API_URL.QUOTES,
@@ -27,51 +29,47 @@ export default async function Quotes() {
     tags: "",
     author: "",
     sortBy: "",
-    order: "",
+    order: "asc",
     limit: 20,
     page: 1,
   };
 
-  // const [state, dispatch] = useReducer(reducer, params);
+  const [state, dispatch] = useReducer(reducer, params);
 
-  // function reducer(state: any, action: any) {
-  //   return { ...state, [action.type]: action.payload };
-  // }
+  function reducer(state: Params, action: DispatchQuotesAndAuthors) {
+    return {
+      ...state,
+      [action.type]: action.payload,
+    };
+  }
 
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     const data: Quotes = await getData(state);
-  //     setData(data);
-  //   }
-  //   fetchData();
-  // }, [state]);
+  useEffect(() => {
+    getData(state).then((data) => setQuotes(data));
+  }, [state]);
 
-  // console.log("data", data);
+  return quotes ? (
+    <section className="flex flex-col gap-2">
+      <Navbar type="quotes" totalCount={quotes.totalCount} dispatch={dispatch} />
 
-  const data: Quotes = await getData(params);
+      {quotes.results.length > 0 ? (
+        <>
+          <Pagination data={quotes} state={state} dispatch={dispatch} />
 
-  return (
-    data && (
-      <section className="flex flex-col gap-2">
-        <Navbar type="quotes" data={data} />
+          <article className="flex flex-col gap-2">
+            {quotes.results.map((quote, index) => {
+              return (
+                <div key={index}>
+                  <QuoteItem quote={quote} />
+                </div>
+              );
+            })}
+          </article>
 
-        {/* <Pagination data={data} state={state} dispatch={dispatch} /> */}
-
-        <div className="flex flex-col gap-2">
-          {data.results.map((result, index) => {
-            return (
-              <div key={index}>
-                {/* @ts-expect-error Async Server Component */}
-                <QuoteItem quote={result} />
-                {/* <Test pageTitle={result.authorSlug} /> */}
-                {/* <p>{result.content}</p> */}
-              </div>
-            );
-          })}
-        </div>
-
-        {/* <Pagination data={data} state={state} dispatch={dispatch} /> */}
-      </section>
-    )
-  );
+          <Pagination data={quotes} state={state} dispatch={dispatch} />
+        </>
+      ) : (
+        <NoResultsFound type="quotes" />
+      )}
+    </section>
+  ) : null;
 }

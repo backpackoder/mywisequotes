@@ -22,21 +22,21 @@ export default function NavbarMain() {
       { label: "Authors", path: "/authors" },
     ],
     login: [
-      { label: "Log in", path: "/api/auth/login", func: undefined },
-      { label: "Sign up", path: "/signUp", func: undefined },
+      { label: "Log in", path: "/api/auth/login" },
+      { label: "Sign up", path: "/signUp" },
     ],
     profile: [
       { label: "My profile", path: "/profile" },
       { label: "My quotes", path: "/myquotes" },
       { label: "My authors", path: "/myauthors" },
-      { label: "Log out", path: "/api/auth/logout", func: undefined },
+      { label: "Log out", path: "/api/auth/logout" },
     ],
   };
   const { main, login, profile } = items;
 
   return (
-    <nav className="flex flex-wrap justify-evenly p-2 border-4">
-      <Logo />
+    <nav className="flex flex-wrap justify-evenly border-4">
+      <Logo width={35} height={35} />
 
       <NavBarItem items={main} />
       <NavBarItem items={isLogged ? profile : login} />
@@ -53,11 +53,13 @@ function NavBarItem({ items }: NavbarItemsProps) {
         const isActive = pathname === item.path;
 
         return (
-          <li key={index} className="flex items-center p-2 cursor-pointer">
+          <li
+            key={index}
+            className="flex items-center p-2 cursor-pointer duration-500 hover:bg-yellow-200"
+          >
             <Link
               href={item.path}
               className={`${isActive ? "text-blue-500" : "text-black"} text-center`}
-              onClick={() => item.func}
             >
               {item.label}
             </Link>

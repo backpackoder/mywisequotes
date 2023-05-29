@@ -1,6 +1,14 @@
 // Types
 import { Authors, Quote, Quotes } from "./API";
 import { Items } from "./navbar";
+import { DispatchQuotesAndAuthors } from "./authors";
+
+// LOGO
+export type LogoProps = {
+  m?: string;
+  width?: number;
+  height?: number;
+};
 
 // PARTS
 export type PartsItemProps = {
@@ -10,7 +18,8 @@ export type PartsItemProps = {
 // NAVBAR
 export type NavbarProps = {
   type: string;
-  data: Quotes | Authors;
+  totalCount: number;
+  dispatch: React.Dispatch<DispatchQuotesAndAuthors>;
 };
 
 export type NavbarItemsProps = {
@@ -39,9 +48,7 @@ export type InputAuthorProps = {
 };
 
 export type AuthorImgProps = {
-  author: {
-    name: string;
-  };
+  author: string;
   width?: number;
 };
 

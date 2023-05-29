@@ -9,6 +9,8 @@ export function getURL(params: Params) {
     .map(([key, value]) => value)
     .find((value) => value === params.url);
 
+  console.log("URL", `${url}?${urlParams(params)}`);
+
   return `${url}?${urlParams(params)}`;
 }
 

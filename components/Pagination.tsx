@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { FaArrowCircleLeft, FaArrowCircleRight } from "react-icons/fa";
 
@@ -10,6 +12,7 @@ export default function Pagination({ data, state, dispatch }: PaginationProps) {
   }
 
   function nextPage() {
+    console.log("nextPage");
     dispatch({ type: "page", payload: state.page === data?.totalPages ? 1 : state.page + 1 });
   }
 
@@ -26,7 +29,7 @@ export default function Pagination({ data, state, dispatch }: PaginationProps) {
   }
 
   return (
-    <div className="flex items-center justify-center gap-4 border-2 p-2">
+    <div className="flex items-center justify-center gap-4 bg-slate-200 p-2 rounded-xl">
       <button onClick={() => prevPage()}>
         <FaArrowCircleLeft size="1.5rem" />
       </button>

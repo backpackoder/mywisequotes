@@ -8,7 +8,7 @@ import AuthorImg from "./AuthorImg";
 // Types
 import { QuoteItemProps } from "@/types/props";
 
-export async function QuoteItem({ quote }: QuoteItemProps) {
+export function QuoteItem({ quote }: QuoteItemProps) {
   return quote ? (
     <div
       className="relative flex flex-col items-center gap-2 bg-[#04f7ff4b] italic p-8 border-1 border-black rounded-lg
@@ -20,8 +20,7 @@ export async function QuoteItem({ quote }: QuoteItemProps) {
         {`"${quote.content}"`}
       </Link>
 
-      {/* @ts-expect-error Async Server Component */}
-      <AuthorImg author={{ name: quote.author }} width={100} />
+      <AuthorImg author={quote.author} width={100} />
 
       <Link href={`/authors/${quote.authorSlug}`} className="cursor-pointer hover:text-[#a3a3a3]">
         - {quote.author}

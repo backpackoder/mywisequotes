@@ -1,14 +1,21 @@
+"use client";
+
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 // Types
 import { AuthorImgProps } from "@/types/props";
 
 // Utils
 import { getImgFromWiki } from "@/utils/getImgFromWiki";
+import { wikiSummary } from "@/types/wikiResponse";
 
-export default async function AuthorImg({ author, width = 200 }: AuthorImgProps) {
-  const wikipedia = await getImgFromWiki(author.name);
+export default function AuthorImg({ author, width = 200 }: AuthorImgProps) {
+  const [wikipedia, setWikipedia] = useState<wikiSummary | null | undefined>(null);
+
+  useEffect(() => {
+    getImgFromWiki(author).then((data) => setWikipedia(data));
+  }, [author]);
 
   return (
     <Image
@@ -17,7 +24,7 @@ export default async function AuthorImg({ author, width = 200 }: AuthorImgProps)
           ? wikipedia.originalimage.source
           : "/authorImgNotFound.jpg"
       }
-      alt={author.name}
+      alt={author}
       width={width}
       height={0}
       className="w-auto h-auto max-h-60 rounded-lg duration-300"
