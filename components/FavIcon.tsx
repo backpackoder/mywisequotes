@@ -15,7 +15,7 @@ export function FavIcon() {
     <FaHeart
       size="1.5rem"
       color={isFav ? "red" : "lightgrey"}
-      className="absolute top-3 right-3 duration-150 hover:scale-125"
+      className="absolute top-3 right-3 duration-150 cursor-pointer hover:scale-125"
       onClick={(e) => addedToFavs(e)}
     />
   );

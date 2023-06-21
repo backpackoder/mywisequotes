@@ -1,6 +1,3 @@
-// Types
-import { ParamsKeys } from "./params";
-
 export type DispatchQuotesAndAuthors = {
   type: string;
   payload: string;

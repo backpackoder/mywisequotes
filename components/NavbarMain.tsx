@@ -1,45 +1,35 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 // Components
 import Logo from "./Logo";
-import { Items } from "@/types/navbar";
+import { SignInButton } from "./AuthButtons";
+
+// Commons
+import { ROUTES } from "@/commons/commons";
+const { HOME, QUOTES, AUTHORS, ABOUT } = ROUTES;
 
 // Types
 import { NavbarItemsProps } from "@/types/props";
 
 export default function NavbarMain() {
-  const isLogged = false;
-
-  const items: {
-    [key: string]: Items[];
-  } = {
-    main: [
-      { label: "Home", path: "/" },
-      { label: "Quotes", path: "/quotes" },
-      { label: "Authors", path: "/authors" },
-    ],
-    login: [
-      { label: "Log in", path: "/api/auth/login" },
-      { label: "Sign up", path: "/signUp" },
-    ],
-    profile: [
-      { label: "My profile", path: "/profile" },
-      { label: "My quotes", path: "/myquotes" },
-      { label: "My authors", path: "/myauthors" },
-      { label: "Log out", path: "/api/auth/logout" },
-    ],
-  };
-  const { main, login, profile } = items;
+  const routes = [
+    { label: "Home", path: HOME },
+    { label: "Quotes", path: QUOTES },
+    { label: "Authors", path: AUTHORS },
+    { label: "About", path: ABOUT },
+  ];
 
   return (
-    <nav className="flex flex-wrap justify-evenly border-4">
+    <nav className="flex flex-wrap justify-evenly border-4 z-50">
       <Logo width={35} height={35} />
 
-      <NavBarItem items={main} />
-      <NavBarItem items={isLogged ? profile : login} />
+      <div className="flex items-center gap-4">
+        <NavBarItem items={routes} />
+        <SignInButton />
+      </div>
     </nav>
   );
 }
@@ -48,7 +38,7 @@ function NavBarItem({ items }: NavbarItemsProps) {
   const pathname = usePathname();
 
   return (
-    <ul className="flex gap-x-2">
+    <ul className="flex gap-x-2 h-full">
       {items.map((item, index) => {
         const isActive = pathname === item.path;
 

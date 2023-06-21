@@ -76,7 +76,7 @@ export default function Searchbar({ type }: SearchbarProps) {
         type="text"
         id="search"
         name="search"
-        placeholder="Search..."
+        placeholder="William Shakespeare"
         autoComplete="off"
         value={state.query ?? ""}
         className=" max-h-12 p-2 border-2 border-black border-opacity-50 rounded-xl"

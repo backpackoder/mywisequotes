@@ -22,7 +22,6 @@ export default async function RandomQuote() {
 
   return quote ? (
     <article className="flex items-center justify-center w-full p-4">
-      {/* @ts-expect-error Async Server Component */}
       <QuoteItem quote={quote[0]} />
     </article>
   ) : null;

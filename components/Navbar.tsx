@@ -5,11 +5,15 @@ import React, { useEffect, useMemo, useState } from "react";
 // Components
 import Searchbar from "./Searchbar";
 
-// Types
-import { NavbarProps } from "@/types/props";
-import { API_URL } from "@/commons/commons";
+// Utils
 import { getData } from "@/utils/getData";
 import { getFilters } from "@/utils/getFilters";
+
+// Commons
+import { API_URL } from "@/commons/commons";
+
+// Types
+import { NavbarProps } from "@/types/props";
 
 export type Tag = {
   dateAdded: string;
