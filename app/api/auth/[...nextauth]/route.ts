@@ -1,10 +1,10 @@
-import NextAuth from "next-auth/next";
+import NextAuth from "next-auth";
 import type { NextAuthOptions } from "next-auth";
 import Google from "next-auth/providers/google";
 import Facebook from "next-auth/providers/facebook";
 import Twitter from "next-auth/providers/twitter";
 
-export const authOptions: NextAuthOptions = {
+const authOptions: NextAuthOptions = {
   providers: [
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID ?? "",
