@@ -25,7 +25,6 @@ export default async function Quote({ params }: { params: { _id: string } }) {
 
   return data ? (
     <section className="p-2 border-2">
-      {/* @ts-expect-error Async Server Component */}
       <QuoteItem quote={data} />
     </section>
   ) : (

@@ -4,15 +4,15 @@ import React from "react";
 import AuthorImg from "@/components/AuthorImg";
 import { QuoteItem } from "@/components/QuoteItem";
 
-// Types
-import { Params } from "@/types/params";
-import { Author, Authors, Quotes } from "@/types/API";
-
 // Utils
 import { getData } from "@/utils/getData";
 
 // Commons
 import { API_URL } from "@/commons/commons";
+
+// Types
+import { Params } from "@/types/params";
+import { Author, Authors, Quotes } from "@/types/API";
 
 export default async function Author({ params }: { params: { slug: string } }) {
   const { slug } = params;
