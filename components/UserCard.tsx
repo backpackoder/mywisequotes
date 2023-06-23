@@ -25,9 +25,11 @@ type UserCardProps = {
 
 export default async function UserCard({ id, name, nationality, image }: UserCardProps) {
   const session = await getServerSession(authOptions);
+
   const currentUserId = await prisma.user
-    .findUnique({ where: { email: session?.user?.email! } })
-    .then((user) => user?.id!);
+    .findUnique({ where: { email: session?.user?.email ?? "" } })
+    .then((user) => user?.id ?? "");
+
   const isProfileMine = currentUserId === id;
 
   return (

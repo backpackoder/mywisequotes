@@ -7,7 +7,7 @@ export default async function Users() {
   const users = await prisma.user.findMany();
 
   return (
-    <div className="flex flex-wrap gap-4 items-center justify-center">
+    <div className="flex flex-wrap gap-4 justify-center">
       {users.map((user) => {
         return (
           <>

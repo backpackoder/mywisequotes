@@ -31,41 +31,39 @@ export default function UserProfile({ user, isProfileMine }: UserProfileProps) {
   };
 
   return (
-    user && (
-      <section className="flex flex-col items-center min-w-full p-0">
-        <article className="flex flex-col flex-wrap items-center justify-center gap-8 w-full p-4 sm:flex-row">
-          <div className="flex flex-col items-center justify-center gap-4">
-            <UserProfileName data={data} />
+    <section className="flex flex-col items-center min-w-full p-0">
+      <article className="flex flex-col flex-wrap items-center justify-center gap-8 w-full p-4 sm:flex-row">
+        <div className="flex flex-col items-center justify-center gap-4">
+          <UserProfileName data={data} />
 
-            <UserProfileImage data={data} />
+          <UserProfileImage data={data} />
 
-            {/* @ts-expect-error Server Component */}
-            {!isProfileMine && <FollowButton targetUserId={user.id} />}
+          {/* @ts-expect-error Server Component */}
+          {!isProfileMine && <FollowButton targetUserId={user.id} />}
 
-            <Follows id={user.id} />
-          </div>
+          <Follows id={user.id} />
+        </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            <UserProfileBio data={data} />
-            <UserProfileNationality data={data} />
-          </div>
-        </article>
+        <div className="flex flex-wrap items-center justify-center gap-4">
+          {user.bio && <UserProfileBio data={data} />}
+          {user.nationality && <UserProfileNationality data={data} />}
+        </div>
+      </article>
 
-        <article className="flex flex-wrap items-center justify-evenly gap-8 w-full bg-[#f7f7f7] p-8">
-          <DiscoverQuotesAndAuthors
-            text={{
-              catchphrase: { before: "My favorite", after: "" },
-              link: { before: "Discover my favorite", after: "" },
-            }}
-          />
-        </article>
+      <article className="flex flex-wrap items-center justify-evenly gap-8 w-full bg-[#f7f7f7] p-8">
+        <DiscoverQuotesAndAuthors
+          text={{
+            catchphrase: { before: "My favorite", after: "" },
+            link: { before: "Discover my favorite", after: "" },
+          }}
+        />
+      </article>
 
-        <article className="flex flex-wrap items-center justify-evenly gap-8 w-full p-4">
-          <CreateQuote />
-          <AddAuthor />
-        </article>
-      </section>
-    )
+      <article className="flex flex-wrap items-center justify-evenly gap-8 w-full p-4">
+        <CreateQuote />
+        <AddAuthor />
+      </article>
+    </section>
   );
 }
 

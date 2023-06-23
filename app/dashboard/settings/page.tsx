@@ -1,5 +1,6 @@
 "use client";
 
+import { redirect } from "next/navigation";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { FaCamera } from "react-icons/fa";
@@ -14,11 +15,12 @@ import { styles } from "@/app/assets/styles/styles";
 import toCapitalize from "@/utils/toCapitalize";
 
 // Commons
-import { DEFAULT_PROFILE_IMAGE } from "@/commons/commons";
+import { DEFAULT_PROFILE_IMAGE, ROUTES } from "@/commons/commons";
 
 // Types
 import { User } from "@prisma/client";
 import { SettingsItemProps } from "@/types/props";
+import { AuthCheck } from "@/components/AuthCheck";
 
 export default function Settings() {
   const [user, setUser] = useState<User | null>(null);
@@ -42,67 +44,70 @@ export default function Settings() {
       });
 
       const user = await res.json();
+
       setUser(user);
     }
     getUser();
   }, [isRefresh]);
 
   return (
-    user && (
-      <section className="flex flex-col items-center justify-center gap-8">
-        <h2 className="font-semibold text-4xl">⚙️ Settings</h2>
+    <AuthCheck>
+      {user && (
+        <section className="flex flex-col items-center justify-center gap-8">
+          <h2 className="font-semibold text-4xl">⚙️ Settings</h2>
 
-        <article className="flex flex-wrap items-center justify-center gap-8">
-          <div className="relative max-w-500 duration-150">
-            <ImageProfileItem
-              type="image"
-              user={user}
-              handleModifiedData={handleModifiedData}
-              Component={
-                <div className="group rounded-full">
-                  <Image
-                    src={data.image}
-                    alt={`${data.name}'s profile`}
-                    width={300}
-                    height={300}
-                    className={`${styles.imgSquareCropped} rounded-full cursor-pointer hover:brightness-75`}
-                  />
+          <article className="flex flex-wrap items-center justify-center gap-8">
+            <div className="relative max-w-500 duration-150">
+              <ImageProfileItem
+                type="image"
+                user={user}
+                handleModifiedData={handleModifiedData}
+                Component={
+                  <div className="group rounded-full">
+                    <Image
+                      src={data.image}
+                      alt={`${data.name}'s profile`}
+                      width={300}
+                      height={300}
+                      className={`${styles.imgSquareCropped} rounded-full cursor-pointer hover:brightness-75`}
+                    />
 
-                  <FaCamera
-                    size={50}
-                    color="white"
-                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 z-50 duration-150 group-hover:opacity-100"
-                  />
-                </div>
-              }
-            />
-          </div>
+                    <FaCamera
+                      size={50}
+                      color="white"
+                      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 z-50 duration-150 group-hover:opacity-100"
+                    />
+                  </div>
+                }
+              />
+            </div>
 
-          <div className="flex flex-col items-start justify-center gap-2 max-w-500">
-            <SettingsItem
-              type="name"
-              user={user}
-              handleModifiedData={handleModifiedData}
-              Component={<p className="text-center">{data.name}</p>}
-            />
+            <div className="flex flex-col items-start justify-center gap-2 max-w-500">
+              <SettingsItem
+                type="name"
+                user={user}
+                handleModifiedData={handleModifiedData}
+                Component={<p className="text-center">{data.name}</p>}
+              />
 
-            <SettingsItem
-              type="nationality"
-              user={user}
-              handleModifiedData={handleModifiedData}
-              Component={<p className="text-center">{data.nationality}</p>}
-            />
+              <SettingsItem
+                type="nationality"
+                user={user}
+                handleModifiedData={handleModifiedData}
+                Component={<p className="text-center">{data.nationality}</p>}
+              />
 
-            <SettingsItem
-              type="bio"
-              user={user}
-              handleModifiedData={handleModifiedData}
-              Component={<p>{data.bio}</p>}
-            />
-          </div>
-        </article>
-      </section>
-    )
+              <SettingsItem
+                type="bio"
+                user={user}
+                handleModifiedData={handleModifiedData}
+                Component={<p>{data.bio}</p>}
+              />
+            </div>
+          </article>
+        </section>
+      )}
+    </AuthCheck>
   );
 }
 

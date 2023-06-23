@@ -1,5 +1,6 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
@@ -55,7 +56,7 @@ export default function FollowClient({ currentUserId, targetUserId, isFollowing 
       <Btn
         currentUserId={currentUserId}
         targetUserId={targetUserId}
-        labels={{ status: "Unfollow", mutating: "Unfollowing..." }}
+        labels={{ label: "Unfollow", mutating: "Unfollowing..." }}
         isMutating={isMutating}
         action={unfollow}
       />
@@ -65,7 +66,7 @@ export default function FollowClient({ currentUserId, targetUserId, isFollowing 
       <Btn
         currentUserId={currentUserId}
         targetUserId={targetUserId}
-        labels={{ status: "Follow", mutating: "Following..." }}
+        labels={{ label: "Follow", mutating: "Following..." }}
         isMutating={isMutating}
         action={follow}
       />
@@ -76,28 +77,49 @@ export default function FollowClient({ currentUserId, targetUserId, isFollowing 
 export type BtnProps = {
   currentUserId: string;
   targetUserId: string;
-  labels: { status: "Follow" | "Unfollow"; mutating: "Following..." | "Unfollowing..." };
+  labels: { label: "Follow" | "Unfollow"; mutating: "Following..." | "Unfollowing..." };
   isMutating: boolean;
   action: () => void;
 };
 
 function Btn({ currentUserId, targetUserId, labels, isMutating, action }: BtnProps) {
-  const [autoFollow, setAutoFollow] = useState(false);
-  const { status, mutating } = labels;
+  const { data: session } = useSession();
+
+  const [autoFollow, setAutoFollow] = useState(!!session);
+  const [unauth, setUnauth] = useState(false);
+  const { label, mutating } = labels;
+
+  function handleClick() {
+    if (!session) {
+      setUnauth(true);
+      return;
+    }
+
+    if (currentUserId === targetUserId) {
+      setAutoFollow(true);
+      return;
+    }
+
+    action();
+  }
 
   return (
     <>
       <button
         className={`bg-blue-200 text-black py-2 px-4 rounded-xl duration-300 ${
-          !isMutating && (status === "Follow" ? "hover:bg-green-500" : "hover:bg-red-500")
+          !isMutating && (label === "Follow" ? "hover:bg-green-500" : "hover:bg-red-500")
         } hover:text-white shadow-xl`}
-        onClick={() => (currentUserId === targetUserId ? setAutoFollow(true) : action())}
+        onClick={() => handleClick()}
       >
-        {isMutating ? mutating : status}
+        {isMutating ? mutating : label}
       </button>
 
       <div className={`${autoFollow ? "block" : "hidden"} text-red-500`}>
-        {`You can't ${status.toLowerCase()} yourself!`}
+        {`You can't ${label.toLowerCase()} yourself!`}
+      </div>
+
+      <div className={`${unauth ? "block" : "hidden"} text-red-500`}>
+        {`You must be logged in to ${label.toLowerCase()} someone!`}
       </div>
     </>
   );

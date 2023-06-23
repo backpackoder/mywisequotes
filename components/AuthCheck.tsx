@@ -1,15 +1,23 @@
 "use client";
 
 import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
-export default function AuthCheck({ children }: { children: React.ReactNode }) {
+// Commons
+import { ROUTES } from "@/commons/commons";
+
+export function AuthCheck({ children }: { children: React.ReactNode }) {
   const { data: session, status } = useSession();
 
   console.log("In AuthCheck", session, status);
 
-  if (status === "authenticated") {
-    return <>{children}</>;
-  } else {
-    return <>Not logged in to see this</>;
+  if (status === "loading") {
+    return <>Loading...</>;
   }
+
+  if (status === "unauthenticated") {
+    redirect(ROUTES.SIGN_IN);
+  }
+
+  return <>{children}</>;
 }

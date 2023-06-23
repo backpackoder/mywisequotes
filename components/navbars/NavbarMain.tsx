@@ -7,7 +7,7 @@ import { FaHome, FaFeather, FaUserEdit, FaQuestion } from "react-icons/fa";
 
 // Components
 import Logo from "../Logo";
-import HamburgerMenu from "../menus/HamburgerMenu";
+import HamburgerMenu from "./HamburgerMenu";
 import { SignInButton } from "../AuthButtons";
 
 // Commons
@@ -31,7 +31,7 @@ export default function NavbarMain() {
     <nav
       className={`fixed top-0 left-0 ${
         isOpen ? "translate-x-0" : "-translate-x-full"
-      } gap-8 bg-white text-xl p-2 rounded-ee-xl shadow-xl duration-500 z-50
+      } gap-8 bg-[rgb(240,240,240)] text-xl p-2 rounded-ee-xl shadow-xl duration-500 z-50
       sm:static sm:translate-x-0 sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:border-4`}
     >
       <HamburgerMenu setIsOpen={setIsOpen} />
