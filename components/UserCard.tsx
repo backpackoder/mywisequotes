@@ -1,6 +1,5 @@
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -10,6 +9,9 @@ import Follows from "./Follows/Follows";
 
 // Styles
 import { styles } from "@/app/assets/styles/styles";
+
+// Utils
+import { authOptions } from "@/utils/authOptions";
 
 // Commons
 import { DEFAULT_PROFILE_IMAGE, ROUTES } from "@/commons/commons";

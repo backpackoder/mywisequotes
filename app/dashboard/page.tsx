@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]/route";
+
+// Utils
+import { authOptions } from "@/utils/authOptions";
 
 // Types
 import UserProfile from "@/components/userProfile/UserProfile";
