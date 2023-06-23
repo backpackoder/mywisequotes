@@ -1,8 +1,8 @@
 import React from "react";
 
 // Components
-import AuthorImg from "@/components/AuthorImg";
-import { QuoteItem } from "@/components/QuoteItem";
+import AuthorImg from "@/components/quotes/AuthorImg";
+import { QuoteItem } from "@/components/quotes/QuoteItem";
 
 // Utils
 import { getData } from "@/utils/getData";

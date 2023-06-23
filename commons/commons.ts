@@ -11,12 +11,15 @@ export const ROUTES = {
   DASHBOARD: "/dashboard",
   MY_QUOTES: "/dashboard/my-quotes",
   MY_AUTHORS: "/dashboard/my-authors",
+  SETTINGS: "/dashboard/settings",
   // Others
   QUOTES: "/quotes",
   QUOTE: (slug: string) => `/quotes/${slug}`,
   AUTHORS: "/authors",
   AUTHOR: (slug: string) => `/authors/${slug}`,
   ABOUT: "/about",
+  USERS: "/users",
+  USER: (id: string) => `/users/${id}`,
 };
 
 // API
@@ -49,3 +52,6 @@ export const API_URL = {
   // Get a list of all tags
   TAGS: `${API_URL_MAIN}/tags`,
 };
+
+// Images
+export const DEFAULT_PROFILE_IMAGE = "/no-profile-image.webp";

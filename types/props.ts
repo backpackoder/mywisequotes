@@ -2,6 +2,7 @@
 import { Authors, Quote, Quotes } from "./API";
 import { Items } from "./navbar";
 import { DispatchQuotesAndAuthors } from "./authors";
+import { User } from "@prisma/client";
 
 // LOGO
 export type LogoProps = {
@@ -10,8 +11,21 @@ export type LogoProps = {
   height?: number;
 };
 
-// PARTS
-export type PartsItemProps = {
+// DISCOVER QUOTES AND AUTHORS
+export type DiscoverQuotesAndAuthorsProps = {
+  h2?: boolean;
+  text: {
+    catchphrase: {
+      before: string;
+      after: string;
+    };
+    link: {
+      before: string;
+      after: string;
+    };
+  };
+};
+export type DiscoverQuotesAndAuthorsItemProps = DiscoverQuotesAndAuthorsProps & {
   theme: "Quotes" | "Authors";
 };
 
@@ -24,6 +38,7 @@ export type NavbarProps = {
 
 export type NavbarItemsProps = {
   items: Items[];
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 // NAVIGATION
@@ -55,4 +70,22 @@ export type AuthorImgProps = {
 // QUOTES
 export type QuoteItemProps = {
   quote: Quote;
+};
+
+// USER PROFILE
+export type UserProfilePartsProps = {
+  data: {
+    name: string;
+    image: string;
+    bio: string;
+    nationality: string;
+  };
+};
+
+// SETTINGS
+export type SettingsItemProps = {
+  type: keyof User;
+  user: User;
+  handleModifiedData: () => void;
+  Component: JSX.Element;
 };

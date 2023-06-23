@@ -3,22 +3,27 @@ import Link from "next/link";
 import React from "react";
 
 // Types
-import { PartsItemProps } from "@/types/props";
+import { DiscoverQuotesAndAuthorsItemProps, DiscoverQuotesAndAuthorsProps } from "@/types/props";
 
-export default function Parts() {
+export function DiscoverQuotesAndAuthors({ h2, text }: DiscoverQuotesAndAuthorsProps) {
   return (
     <article className="flex flex-wrap items-center justify-evenly gap-8 w-full bg-[#f7f7f7] p-8">
-      <PartsItem theme="Quotes" />
-      <PartsItem theme="Authors" />
+      <Item theme="Quotes" h2={h2} text={text} />
+      <Item theme="Authors" h2={h2} text={text} />
     </article>
   );
 }
 
-function PartsItem({ theme }: PartsItemProps) {
+function Item({ theme, h2, text }: DiscoverQuotesAndAuthorsItemProps) {
+  const { catchphrase, link } = text;
+
   return (
-    <div className="group flex flex-col items-center justify-center gap-2 bg-[#e6e6e6] p-4 border-2 rounded-lg shadow-xl">
-      <h2>{theme}</h2>
-      <p>Discover {theme.toLowerCase()} from our community.</p>
+    <div className="group flex flex-col items-center justify-center gap-2 max-w-sm bg-[#e6e6e6] p-4 border-2 rounded-lg shadow-xl">
+      {h2 && <h2>{theme}</h2>}
+
+      <h3>
+        {catchphrase.before} {theme.toLowerCase()} {catchphrase.after}
+      </h3>
 
       <div className="relative w-full h-64 overflow-hidden">
         <Image
@@ -34,7 +39,7 @@ function PartsItem({ theme }: PartsItemProps) {
         href={`/${theme.toLowerCase()}`}
         className="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600"
       >
-        I discover the {theme.toLowerCase()}
+        {link.before} {theme.toLowerCase()} {link.after}
       </Link>
     </div>
   );

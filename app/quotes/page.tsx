@@ -3,14 +3,9 @@
 import React, { useEffect, useReducer, useState } from "react";
 
 // Components
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/navbars/Navbar";
 import Pagination from "@/components/Pagination";
-import { QuoteItem } from "@/components/QuoteItem";
-
-// Types
-import { Quotes } from "@/types/API";
-import { Params } from "@/types/params";
-import { DispatchQuotesAndAuthors } from "@/types/authors";
+import { QuoteItem } from "@/components/quotes/QuoteItem";
 
 // Hooks
 import { getData } from "@/utils/getData";
@@ -18,6 +13,11 @@ import { getData } from "@/utils/getData";
 // Commons
 import { API_URL } from "@/commons/commons";
 import { NoResultsFound } from "@/components/NoResultsFound";
+
+// Types
+import { Quotes } from "@/types/API";
+import { Params } from "@/types/params";
+import { DispatchQuotesAndAuthors } from "@/types/authors";
 
 export default function Quotes() {
   const [quotes, setQuotes] = useState<Quotes | null>(null);

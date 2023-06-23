@@ -4,20 +4,20 @@ import Link from "next/link";
 import { useEffect, useReducer, useState } from "react";
 
 // Components
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/navbars/Navbar";
 import Pagination from "@/components/Pagination";
-import AuthorImg from "@/components/AuthorImg";
-
-// Types
-import { Params } from "@/types/params";
-import { Authors } from "@/types/API";
-import { DispatchQuotesAndAuthors } from "@/types/authors";
+import AuthorImg from "@/components/quotes/AuthorImg";
 
 // Utils
 import { getData } from "@/utils/getData";
 
 // Commons
 import { API_URL } from "@/commons/commons";
+
+// Types
+import { Params } from "@/types/params";
+import { Authors } from "@/types/API";
+import { DispatchQuotesAndAuthors } from "@/types/authors";
 
 export default function Authors() {
   const params: Params = {

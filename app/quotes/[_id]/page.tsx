@@ -1,11 +1,9 @@
-import React from "react";
+// Commons
+import { API_URL } from "@/commons/commons";
+import { QuoteItem } from "@/components/quotes/QuoteItem";
 
 // Types
 import { Quote } from "@/types/API";
-
-// Commons
-import { API_URL } from "@/commons/commons";
-import { QuoteItem } from "@/components/QuoteItem";
 
 export default async function Quote({ params }: { params: { _id: string } }) {
   const { _id } = params;

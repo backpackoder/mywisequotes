@@ -1,5 +1,5 @@
 // Types
-import { Tag } from "@/components/Navbar";
+import { Tag } from "@/components/navbars/Navbar";
 
 export function getFilters({ type, tags }: { type: string; tags: Tag[] }) {
   const limit = {

@@ -6,17 +6,17 @@ import React, { useEffect, useMemo, useReducer, useState } from "react";
 // Components
 import { NoResultsFound } from "./NoResultsFound";
 
-// Types
-import { Authors, Quotes } from "@/types/API";
-import { Params } from "@/types/params";
-import { SearchbarProps } from "@/types/searchbar";
-import { DispatchQuotesAndAuthors } from "@/types/authors";
-
 // Utils
 import { getData } from "@/utils/getData";
 
 // Commons
 import { API_URL } from "@/commons/commons";
+
+// Types
+import { Authors, Quotes } from "@/types/API";
+import { Params } from "@/types/params";
+import { SearchbarProps } from "@/types/searchbar";
+import { DispatchQuotesAndAuthors } from "@/types/authors";
 
 export default function Searchbar({ type }: SearchbarProps) {
   const [searchQuote, setSearchQuote] = useState<Quotes | null>(null);

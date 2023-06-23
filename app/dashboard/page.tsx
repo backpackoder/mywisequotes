@@ -1,15 +1,14 @@
+import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
+import { authOptions } from "../api/auth/[...nextauth]/route";
 
-// Commons
-import { ROUTES } from "@/commons/commons";
+// Types
+import UserProfile from "@/components/userProfile/UserProfile";
 
 export default async function Dashboard() {
-  const session = await getServerSession();
+  const session = await getServerSession(authOptions);
+  const user = await prisma.user.findUnique({ where: { email: session?.user?.email! } });
+  const isProfileMine = session?.user?.email === user?.email;
 
-  if (!session) {
-    redirect(ROUTES.SIGN_IN);
-  }
-
-  return <div>Dashboard page</div>;
+  return user && <UserProfile user={user} isProfileMine={isProfileMine} />;
 }

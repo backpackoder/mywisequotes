@@ -3,7 +3,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 
 // Components
-import Searchbar from "./Searchbar";
+import Searchbar from "../Searchbar";
 
 // Utils
 import { getData } from "@/utils/getData";
