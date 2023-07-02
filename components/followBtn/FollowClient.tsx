@@ -85,7 +85,7 @@ export type BtnProps = {
 function Btn({ currentUserId, targetUserId, labels, isMutating, action }: BtnProps) {
   const { data: session } = useSession();
 
-  const [autoFollow, setAutoFollow] = useState(!!session);
+  const [autoFollow, setAutoFollow] = useState(false);
   const [unauth, setUnauth] = useState(false);
   const { label, mutating } = labels;
 

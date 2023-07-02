@@ -4,6 +4,11 @@ import { Items } from "./navbar";
 import { DispatchQuotesAndAuthors } from "./authors";
 import { User } from "@prisma/client";
 
+// LAYOUT
+export type LayoutProps = {
+  children: React.ReactNode;
+};
+
 // LOGO
 export type LogoProps = {
   m?: string;
@@ -64,7 +69,10 @@ export type InputAuthorProps = {
 
 export type AuthorImgProps = {
   author: string;
-  width?: number;
+  image?: {
+    width?: number;
+    height?: number;
+  };
 };
 
 // QUOTES
@@ -75,10 +83,12 @@ export type QuoteItemProps = {
 // USER PROFILE
 export type UserProfilePartsProps = {
   data: {
+    username: string;
     name: string;
     image: string;
     bio: string;
     nationality: string;
+    role: JSX.Element | null;
   };
 };
 

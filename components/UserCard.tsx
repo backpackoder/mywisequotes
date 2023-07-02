@@ -14,16 +14,17 @@ import { styles } from "@/app/assets/styles/styles";
 import { authOptions } from "@/utils/authOptions";
 
 // Commons
-import { DEFAULT_PROFILE_IMAGE, ROUTES } from "@/commons/commons";
+import { IMAGES, ROUTES } from "@/commons/commons";
 
 type UserCardProps = {
   id: string;
+  username: string;
   name: string | null;
   nationality: string | null;
   image: string | null;
 };
 
-export default async function UserCard({ id, name, nationality, image }: UserCardProps) {
+export default async function UserCard({ id, username, name, nationality, image }: UserCardProps) {
   const session = await getServerSession(authOptions);
 
   const currentUserId = await prisma.user
@@ -35,17 +36,19 @@ export default async function UserCard({ id, name, nationality, image }: UserCar
   return (
     <div className="flex flex-col items-center justify-center gap-4 bg-[beige] p-4 border-2 rounded-lg shadow-xl">
       <h3 className="font-semibold text-xl">
-        <Link href={ROUTES.USER(id)}>
+        <Link href={isProfileMine ? ROUTES.DASHBOARD : ROUTES.USER(id)}>
           {name} {isProfileMine && "(You)"}
         </Link>
       </h3>
 
+      <Link href={isProfileMine ? ROUTES.DASHBOARD : ROUTES.USER(id)}>@{username}</Link>
+
       <Image
-        src={image ?? DEFAULT_PROFILE_IMAGE}
+        src={image ?? IMAGES.DEFAULT_PROFILE_IMAGE}
         alt={`${name}'s profile`}
         width={100}
         height={100}
-        className={`${styles.imgSquareCropped} rounded-full cursor-pointer`}
+        className={`${styles.imgSquareCropped} rounded-full`}
       />
 
       <div className="flex flex-col items-center justify-center gap-4">

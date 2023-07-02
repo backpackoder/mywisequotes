@@ -15,8 +15,12 @@ export const ROUTES = {
   // Others
   QUOTES: "/quotes",
   QUOTE: (slug: string) => `/quotes/${slug}`,
+  QUOTE_CREATE: "/quotes/create",
+  QUOTE_EDIT: (slug: string) => `/quotes/${slug}/edit`,
   AUTHORS: "/authors",
   AUTHOR: (slug: string) => `/authors/${slug}`,
+  AUTHOR_CREATE: "/authors/create",
+  AUTHOR_EDIT: (slug: string) => `/authors/${slug}/edit`,
   ABOUT: "/about",
   USERS: "/users",
   USER: (id: string) => `/users/${id}`,
@@ -54,4 +58,7 @@ export const API_URL = {
 };
 
 // Images
-export const DEFAULT_PROFILE_IMAGE = "/no-profile-image.webp";
+export const IMAGES = {
+  DEFAULT_PROFILE_IMAGE: "/no-profile-image.webp",
+  NOT_FOUND_PROFILE_IMAGE: "/authorImgNotFound.jpg",
+};

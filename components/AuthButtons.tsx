@@ -12,7 +12,7 @@ import { GoGear } from "react-icons/go";
 import { styles } from "@/app/assets/styles/styles";
 
 // Commons
-import { DEFAULT_PROFILE_IMAGE, ROUTES } from "@/commons/commons";
+import { IMAGES, ROUTES } from "@/commons/commons";
 const { DASHBOARD, MY_QUOTES, MY_AUTHORS, SETTINGS, SIGN_OUT } = ROUTES;
 
 export function SignInButton({
@@ -71,7 +71,7 @@ export function SignInButton({
     session && (
       <div className="relative">
         <Image
-          src={session.user?.image ?? DEFAULT_PROFILE_IMAGE}
+          src={session.user?.image ?? IMAGES.DEFAULT_PROFILE_IMAGE}
           alt={session.user?.name ?? "No name"}
           width={32}
           height={32}

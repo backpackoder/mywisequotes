@@ -6,11 +6,14 @@ import { DiscoverQuotesAndAuthors } from "../DiscoverQuotesAndAuthors";
 import { CreateQuote } from "../quotes/CreateQuote";
 import { AddAuthor } from "../authors/AddAuthor";
 
-// Styles
+// Assets
+import moderator from "@/app/assets/images/roles/moderator.png";
+import admin from "@/app/assets/images/roles/admin.png";
+import owner from "@/app/assets/images/roles/owner.png";
 import { styles } from "@/app/assets/styles/styles";
 
 // Commons
-import { DEFAULT_PROFILE_IMAGE } from "@/commons/commons";
+import { IMAGES } from "@/commons/commons";
 
 // Types
 import { User } from "@prisma/client";
@@ -24,11 +27,41 @@ export type UserProfileProps = {
 
 export default function UserProfile({ user, isProfileMine }: UserProfileProps) {
   const data = {
+    username: user?.username,
     name: user?.name ?? "Unknown",
-    image: user?.image ?? DEFAULT_PROFILE_IMAGE,
+    image: user?.image ?? IMAGES.DEFAULT_PROFILE_IMAGE,
     bio: user?.bio ?? "",
     nationality: user?.nationality ?? "Unknown",
+    role: getRole(),
   };
+
+  function getRole() {
+    switch (user?.role) {
+      case "OWNER":
+        return (
+          <>
+            <Image src={owner} alt="Owner's badge" width={50} height={50} /> Owner
+          </>
+        );
+
+      case "ADMIN":
+        return (
+          <>
+            <Image src={admin} alt="Admin's badge" width={50} height={50} /> Admin
+          </>
+        );
+
+      case "MODERATOR":
+        return (
+          <>
+            <Image src={moderator} alt="Moderator's badge" width={50} height={50} /> Moderator
+          </>
+        );
+
+      default:
+        return null;
+    }
+  }
 
   return (
     <section className="flex flex-col items-center min-w-full p-0">
@@ -38,6 +71,8 @@ export default function UserProfile({ user, isProfileMine }: UserProfileProps) {
 
           <UserProfileImage data={data} />
 
+          <UserProfileUsername data={data} />
+
           {/* @ts-expect-error Server Component */}
           {!isProfileMine && <FollowButton targetUserId={user.id} />}
 
@@ -45,6 +80,7 @@ export default function UserProfile({ user, isProfileMine }: UserProfileProps) {
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-4">
+          {data.role && <UserProfileRole data={data} />}
           {user.bio && <UserProfileBio data={data} />}
           {user.nationality && <UserProfileNationality data={data} />}
         </div>
@@ -59,15 +95,17 @@ export default function UserProfile({ user, isProfileMine }: UserProfileProps) {
         />
       </article>
 
-      <article className="flex flex-wrap items-center justify-evenly gap-8 w-full p-4">
-        <CreateQuote />
-        <AddAuthor />
-      </article>
+      {isProfileMine && (
+        <article className="flex flex-wrap items-center justify-evenly gap-8 w-full p-4">
+          <CreateQuote />
+          <AddAuthor />
+        </article>
+      )}
     </section>
   );
 }
 
-export function UserProfileName({ data }: UserProfilePartsProps) {
+function UserProfileName({ data }: UserProfilePartsProps) {
   return <h1 className="font-bold text-4xl">{data.name}</h1>;
 }
 
@@ -75,7 +113,7 @@ function UserProfileImage({ data }: UserProfilePartsProps) {
   return (
     <Image
       src={data.image.toString()}
-      alt={`${data.name}'s profile`}
+      alt={`${data}'s profile`}
       width={200}
       height={200}
       className={`${styles.imgSquareCropped} rounded-full`}
@@ -83,12 +121,16 @@ function UserProfileImage({ data }: UserProfilePartsProps) {
   );
 }
 
-function UserProfileNationality({ data }: UserProfilePartsProps) {
+function UserProfileUsername({ data }: UserProfilePartsProps) {
+  return <h2 className="text-lg">@{data.username}</h2>;
+}
+
+function UserProfileRole({ data }: UserProfilePartsProps) {
   return (
     <div>
-      <h3 className="font-semibold">Origin:</h3>
-      <div className="h-full bg-gray-200 py-4 px-8 border-2 rounded-xl">
-        <p>{data.nationality}</p>
+      <h3 className="font-semibold">Role:</h3>
+      <div className="flex flex-col items-center justify-center h-full bg-gray-200 py-4 px-8 border-2 rounded-xl">
+        {data.role}
       </div>
     </div>
   );
@@ -100,6 +142,17 @@ function UserProfileBio({ data }: UserProfilePartsProps) {
       <h3 className="font-semibold">Bio:</h3>
       <div className="h-full bg-gray-200 py-4 px-8 border-2 rounded-xl">
         <p>{`-"${data.bio}"`}</p>
+      </div>
+    </div>
+  );
+}
+
+function UserProfileNationality({ data }: UserProfilePartsProps) {
+  return (
+    <div>
+      <h3 className="font-semibold">Origin:</h3>
+      <div className="h-full bg-gray-200 py-4 px-8 border-2 rounded-xl">
+        <p>{data.nationality}</p>
       </div>
     </div>
   );

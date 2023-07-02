@@ -7,6 +7,7 @@ import UserProfile from "@/components/userProfile/UserProfile";
 
 // Utils
 import { authOptions } from "@/utils/authOptions";
+import BreadCrumbUser from "./BreadCrumb";
 
 type UserProfileProps = {
   params: {
@@ -28,5 +29,12 @@ export default async function User({ params }: UserProfileProps) {
     return <div className="text-center">User not found</div>;
   }
 
-  return user && <UserProfile user={user} isProfileMine={isProfileMine} />;
+  return (
+    user && (
+      <section>
+        <BreadCrumbUser user={user} id={params.id} />
+        <UserProfile user={user} isProfileMine={isProfileMine} />
+      </section>
+    )
+  );
 }

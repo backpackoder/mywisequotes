@@ -12,14 +12,6 @@ export async function GET(req: Request) {
   const user = currentUserEmail
     ? await prisma.user.findUnique({
         where: { email: currentUserEmail },
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          nationality: true,
-          bio: true,
-          image: true,
-        },
       })
     : null;
 
@@ -38,5 +30,12 @@ export async function PUT(req: Request) {
     data,
   });
 
-  return NextResponse.json(user);
+  // const settings = await prisma.userSettings.update({
+  //   where: { userId: user.id },
+  //   data: {
+  //     language: data.language,
+  //   },
+  // });
+
+  return NextResponse.json([user]);
 }

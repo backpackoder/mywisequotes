@@ -1,11 +1,11 @@
 "use client";
 
-import { redirect } from "next/navigation";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { FaCamera } from "react-icons/fa";
 
 // Components
+import { AuthCheck } from "@/components/AuthCheck";
 import { UserDataEditor } from "../UserDataEditor";
 
 // Styles
@@ -15,26 +15,26 @@ import { styles } from "@/app/assets/styles/styles";
 import toCapitalize from "@/utils/toCapitalize";
 
 // Commons
-import { DEFAULT_PROFILE_IMAGE, ROUTES } from "@/commons/commons";
+import { IMAGES } from "@/commons/commons";
 
 // Types
 import { User } from "@prisma/client";
 import { SettingsItemProps } from "@/types/props";
-import { AuthCheck } from "@/components/AuthCheck";
 
 export default function Settings() {
-  const [user, setUser] = useState<User | null>(null);
-  const [isRefresh, setIsRefresh] = useState(0);
+  const [user, setUser] = useState<User | null | undefined>(null);
+  const [isRefresh, setIsRefresh] = useState(false);
 
   const data = {
+    username: user?.username,
     name: user?.name ?? "Unknown",
-    image: user?.image ?? DEFAULT_PROFILE_IMAGE,
+    image: user?.image ?? IMAGES.DEFAULT_PROFILE_IMAGE,
     bio: user?.bio ?? "",
     nationality: user?.nationality ?? "Unknown",
   };
 
   function handleModifiedData() {
-    setIsRefresh((prev) => prev + 1);
+    setIsRefresh((prev) => !prev);
   }
 
   useEffect(() => {
@@ -43,10 +43,12 @@ export default function Settings() {
         method: "GET",
       });
 
-      const user = await res.json();
+      const user: User | null | undefined = await res.json();
 
       setUser(user);
+      console.log("user: ", user);
     }
+
     getUser();
   }, [isRefresh]);
 
@@ -57,25 +59,19 @@ export default function Settings() {
           <h2 className="font-semibold text-4xl">⚙️ Settings</h2>
 
           <article className="flex flex-wrap items-center justify-center gap-8">
-            <div className="relative max-w-500 duration-150">
+            <div className="max-w-500 duration-150">
               <ImageProfileItem
                 type="image"
                 user={user}
                 handleModifiedData={handleModifiedData}
                 Component={
-                  <div className="group rounded-full">
+                  <div className="rounded-full">
                     <Image
                       src={data.image}
                       alt={`${data.name}'s profile`}
                       width={300}
                       height={300}
-                      className={`${styles.imgSquareCropped} rounded-full cursor-pointer hover:brightness-75`}
-                    />
-
-                    <FaCamera
-                      size={50}
-                      color="white"
-                      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 z-50 duration-150 group-hover:opacity-100"
+                      className={`${styles.imgSquareCropped} rounded-full cursor-pointer`}
                     />
                   </div>
                 }
@@ -83,6 +79,13 @@ export default function Settings() {
             </div>
 
             <div className="flex flex-col items-start justify-center gap-2 max-w-500">
+              <SettingsItem
+                type="username"
+                user={user}
+                handleModifiedData={handleModifiedData}
+                Component={<p className="text-center">{data.username}</p>}
+              />
+
               <SettingsItem
                 type="name"
                 user={user}
@@ -118,8 +121,19 @@ function ImageProfileItem({ type, user, handleModifiedData, Component }: Setting
     <div className="flex flex-col flex-wrap gap-2">
       <h3 className="font-semibold">{toCapitalize(type)}:</h3>
       <div className="flex flex-col gap-4 py-2 px-4 border-2 rounded-lg">
-        <div className="rounded-full" onClick={() => setIsEditing((prev) => !prev)}>
+        <div
+          className={`group relative rounded-full ${isEditing ? "" : "hover:brightness-75"}`}
+          onClick={() => setIsEditing((prev) => !prev)}
+        >
           {Component}
+
+          <FaCamera
+            size={50}
+            color="white"
+            className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ${
+              isEditing ? "hidden" : ""
+            } opacity-0 z-50 duration-150 group-hover:opacity-100`}
+          />
         </div>
 
         {isEditing && (

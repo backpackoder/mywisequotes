@@ -19,6 +19,7 @@ export function UserDataEditor({
   handleModifiedData,
 }: UserDataEditorProps) {
   const [value, setValue] = useState(user[type]);
+  const [isUsernameTaken, setIsUsernameTaken] = useState(false);
 
   function handleCancel() {
     setValue("");
@@ -30,6 +31,16 @@ export function UserDataEditor({
       [type]: value,
     };
 
+    const users: any = await fetch("/api/users", {
+      method: "GET",
+    }).then((res) => res.json());
+
+    const usernameCheck = users.some((user: any) => user.username === value);
+
+    if (usernameCheck) {
+      return setIsUsernameTaken(true);
+    }
+
     const res = await fetch("/api/user", {
       method: "PUT",
       body: JSON.stringify(body),
@@ -40,12 +51,10 @@ export function UserDataEditor({
 
     if (value === "") return setIsEditing(false);
 
-    value !== user[type]
-      ? res
-          .json()
-          .then(() => handleModifiedData())
-          .then(() => setIsEditing(false))
-      : setIsEditing(false);
+    value !== user[type] && res.json().then(() => handleModifiedData());
+
+    setIsUsernameTaken(false);
+    setIsEditing(false);
   }
 
   const editor = useMemo(() => {
@@ -80,8 +89,12 @@ export function UserDataEditor({
     <div className="flex flex-col items-center justify-center gap-2 w-full">
       {editor}
 
-      {!value && (
-        <p className="bg-red-300 py-1 px-2 rounded-lg">You must enter at last 1 caracter!</p>
+      {isUsernameTaken && (
+        <p className="bg-red-300 py-1 px-2 rounded-lg">This username is already taken!</p>
+      )}
+
+      {(!value || (typeof value === "string" && value.length < 3)) && (
+        <p className="bg-red-300 py-1 px-2 rounded-lg">You must enter at last 3 caracters!</p>
       )}
 
       <div className="flex flex-wrap items-center justify-center gap-4">
