@@ -5,6 +5,7 @@ export type Params = {
   tag?: string;
   author?: string;
 
+  slug?: string;
   limit?: number;
 
   sortBy?: string;

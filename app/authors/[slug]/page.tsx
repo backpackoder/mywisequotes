@@ -1,14 +1,9 @@
-import React from "react";
-
 // Components
 import { AuthorImg } from "@/components/quotes/AuthorImg";
 import { QuoteItem } from "@/components/quotes/QuoteItem";
 
 // Utils
 import { getData } from "@/utils/getData";
-
-// Commons
-import { API_URL } from "@/commons/commons";
 
 // Types
 import { Params } from "@/types/params";
@@ -18,12 +13,10 @@ export default async function Author({ params }: { params: { slug: string } }) {
   const { slug } = params;
 
   const authorsParams: Params = {
-    url: API_URL.AUTHORS,
     slug,
   };
 
   const quotesParams: Params = {
-    url: API_URL.QUOTES,
     author: slug,
   };
 
