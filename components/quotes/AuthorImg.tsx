@@ -11,19 +11,20 @@ import { IMAGES } from "@/commons/commons";
 
 // Types
 import { AuthorImgProps } from "@/types/props";
+import { API } from "@/types/prisma";
 import { wikiSummary } from "@/types/wikiResponse";
 
-export default function AuthorImg({ author, image }: AuthorImgProps) {
-  const [wikipedia, setWikipedia] = useState<wikiSummary | null | undefined>(null);
+export function AuthorImg({ author, image }: AuthorImgProps) {
+  const [wikipedia, setWikipedia] = useState<API<wikiSummary>>(null);
 
   useEffect(() => {
-    getImgFromWiki(author).then((data) => setWikipedia(data));
+    author && getImgFromWiki(author).then((data) => setWikipedia(data));
   }, [author]);
 
   return (
     <Image
       src={wikipedia?.originalimage?.source ?? IMAGES.NOT_FOUND_PROFILE_IMAGE}
-      alt={author}
+      alt={author ? `${author}'s profile image` : "Default profile image"}
       width={image?.width ?? 100}
       height={image?.height ?? 0}
       className="w-auto h-auto max-h-60 rounded-lg duration-300"

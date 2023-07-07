@@ -18,7 +18,7 @@ import { Params } from "@/types/params";
 import { SearchbarProps } from "@/types/searchbar";
 import { DispatchQuotesAndAuthors } from "@/types/authors";
 
-export default function Searchbar({ type }: SearchbarProps) {
+export function Searchbar({ type }: SearchbarProps) {
   const [searchQuote, setSearchQuote] = useState<Quotes | null>(null);
   const [searchAuthor, setSearchAuthor] = useState<Authors | null>(null);
 

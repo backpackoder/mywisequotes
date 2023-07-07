@@ -1,13 +1,13 @@
-import { prisma } from "@/lib/prisma";
-import { getServerSession } from "next-auth";
 import { Metadata } from "next";
+import { getServerSession } from "next-auth";
+import { prisma } from "@/lib/prisma";
 
 // Components
-import UserProfile from "@/components/userProfile/UserProfile";
+import BreadCrumbUser from "./BreadCrumb";
+import { UserProfile } from "@/components/userProfile/UserProfile";
 
 // Utils
 import { authOptions } from "@/utils/authOptions";
-import BreadCrumbUser from "./BreadCrumb";
 
 type UserProfileProps = {
   params: {

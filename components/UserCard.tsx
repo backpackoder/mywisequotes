@@ -4,8 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 // Components
-import FollowButton from "./followBtn/FollowBtn";
-import Follows from "./Follows/Follows";
+import { FollowButton } from "./buttons/FollowBtn";
+import { Follows } from "./Follows/Follows";
 
 // Styles
 import { styles } from "@/app/assets/styles/styles";
@@ -24,7 +24,7 @@ type UserCardProps = {
   image: string | null;
 };
 
-export default async function UserCard({ id, username, name, nationality, image }: UserCardProps) {
+export async function UserCard({ id, username, name, nationality, image }: UserCardProps) {
   const session = await getServerSession(authOptions);
 
   const currentUserId = await prisma.user

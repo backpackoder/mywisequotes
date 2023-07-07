@@ -3,22 +3,40 @@
 import { useMemo, useState } from "react";
 
 // Types
-import { User } from "@prisma/client";
+import { User, UserSettings } from "@prisma/client";
 
 type UserDataEditorProps = {
-  type: keyof User;
-  user: User;
+  type?: keyof User;
+  typeSettings?: keyof UserSettings;
+  user?: User;
+  userSettings?: UserSettings;
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
   handleModifiedData: () => void;
 };
 
 export function UserDataEditor({
   type,
+  typeSettings,
   user,
+  userSettings,
   setIsEditing,
   handleModifiedData,
 }: UserDataEditorProps) {
-  const [value, setValue] = useState(user[type]);
+  function getType() {
+    if (type && user) return type;
+    if (typeSettings && userSettings) return typeSettings;
+    return "";
+  }
+
+  function getUserData() {
+    if (type && user) return user?.[type];
+    if (typeSettings && userSettings) return userSettings?.[typeSettings];
+    return "";
+  }
+  const data = getUserData();
+  console.log("data", data);
+
+  const [value, setValue] = useState(data);
   const [isUsernameTaken, setIsUsernameTaken] = useState(false);
 
   function handleCancel() {
@@ -28,7 +46,7 @@ export function UserDataEditor({
 
   async function updateUser() {
     const body = {
-      [type]: value,
+      [getType()]: value,
     };
 
     const users: any = await fetch("/api/users", {
@@ -51,7 +69,7 @@ export function UserDataEditor({
 
     if (value === "") return setIsEditing(false);
 
-    value !== user[type] && res.json().then(() => handleModifiedData());
+    value !== data && res.json().then(() => handleModifiedData());
 
     setIsUsernameTaken(false);
     setIsEditing(false);
@@ -63,7 +81,7 @@ export function UserDataEditor({
         return (
           <textarea
             name={type}
-            defaultValue={user[type] ?? ""}
+            defaultValue={user?.[type] ?? ""}
             value={value?.toString() ?? ""}
             className="min-h-[150px] p-2 border-2 rounded-lg"
             onChange={(e) => setValue(e.target.value)}
@@ -75,7 +93,7 @@ export function UserDataEditor({
           <input
             type="text"
             name={type}
-            defaultValue={user[type]?.toLocaleString() ?? ""}
+            defaultValue={data?.toLocaleString() ?? ""}
             value={value?.toLocaleString() ?? ""}
             max={type === "name" ? 30 : undefined}
             className="p-2 border-2 rounded-lg"
@@ -83,7 +101,7 @@ export function UserDataEditor({
           />
         );
     }
-  }, [type, user, value]);
+  }, [data, type, user, value]);
 
   return (
     <div className="flex flex-col items-center justify-center gap-2 w-full">

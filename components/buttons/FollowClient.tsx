@@ -10,7 +10,7 @@ interface Props {
   isFollowing: boolean;
 }
 
-export default function FollowClient({ currentUserId, targetUserId, isFollowing }: Props) {
+export function FollowClient({ currentUserId, targetUserId, isFollowing }: Props) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [isFetching, setIsFetching] = useState(false);

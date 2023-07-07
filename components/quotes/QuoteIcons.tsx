@@ -8,15 +8,15 @@ import { FaEdit, FaHeart } from "react-icons/fa";
 import { ROUTES } from "@/commons/commons";
 
 // Types
-import { Quote } from "@/types/API";
+import { PrismaQuote } from "@/types/prisma";
 
 export type QuoteIconsProps = {
-  quote: Quote;
+  quote: PrismaQuote;
 };
 
 export function QuoteIcons({ quote }: QuoteIconsProps) {
   return (
-    <div className="absolute top-3 right-3 flex items-center justify-center gap-2">
+    <div className="flex items-center justify-end gap-2 w-full">
       <EditIcon quote={quote} />
       <FavIcon />
     </div>
@@ -27,7 +27,7 @@ function EditIcon({ quote }: QuoteIconsProps) {
   const router = useRouter();
 
   function redirect() {
-    router.push(ROUTES.QUOTE_EDIT(quote._id));
+    router.push(ROUTES.QUOTE_EDIT(quote.id));
   }
 
   return (

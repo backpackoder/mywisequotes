@@ -11,7 +11,7 @@ import { getData } from "@/utils/getData";
 // Commons
 import { API_URL } from "@/commons/commons";
 
-export default async function RandomQuote() {
+export async function RandomQuote() {
   const params: Params = {
     url: API_URL.QUOTES_RANDOM,
 

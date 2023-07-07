@@ -1,10 +1,13 @@
+import Link from "next/link";
+
+// Components
+import { QuoteItem } from "@/components/quotes/QuoteItem";
+
 // Commons
 import { API_URL, ROUTES } from "@/commons/commons";
-import { QuoteItem } from "@/components/quotes/QuoteItem";
 
 // Types
 import { Quote } from "@/types/API";
-import Link from "next/link";
 
 export default async function Quote({ params }: { params: { _id: string } }) {
   const { _id } = params;

@@ -4,9 +4,9 @@ import Link from "next/link";
 import { useEffect, useReducer, useState } from "react";
 
 // Components
-import Navbar from "@/components/navbars/Navbar";
-import Pagination from "@/components/Pagination";
-import AuthorImg from "@/components/quotes/AuthorImg";
+import { Navbar } from "@/components/navbars/Navbar";
+import { Pagination } from "@/components/Pagination";
+import { AuthorImg } from "@/components/quotes/AuthorImg";
 
 // Utils
 import { getData } from "@/utils/getData";

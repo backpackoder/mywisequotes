@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 
 // Components
 import { BreadCrumb, SVG_Home } from "@/components/navbars/BreadCrumb";
-import UserCard from "@/components/UserCard";
+import { UserCard } from "@/components/UserCard";
 
 // Commons
 import { ROUTES } from "@/commons/commons";

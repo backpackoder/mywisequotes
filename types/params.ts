@@ -1,9 +1,8 @@
 export type Params = {
-  url: string;
-
+  language?: string;
   maxLength?: number;
   minLength?: number;
-  tags?: string;
+  tag?: string;
   author?: string;
 
   limit?: number;
@@ -11,17 +10,8 @@ export type Params = {
   sortBy?: string;
   order?: "asc" | "desc";
   page?: number;
-  slug?: string;
 
   query?: string | null;
-  fields?: string;
-  fuzzyMaxEdits?: number;
-  fuzzyMaxExpansions?: number;
-
-  autocomplete?: boolean;
-  matchThreshold?: number;
-
-  _id?: string;
 };
 
 export type ParamsKeys = keyof Params;

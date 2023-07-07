@@ -5,7 +5,14 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
-import { FaAddressCard, FaFeather, FaUserEdit, FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
+import {
+  FaAddressCard,
+  FaFeather,
+  FaUserEdit,
+  FaSignInAlt,
+  FaSignOutAlt,
+  FaPlus,
+} from "react-icons/fa";
 import { GoGear } from "react-icons/go";
 
 // Styles
@@ -13,7 +20,7 @@ import { styles } from "@/app/assets/styles/styles";
 
 // Commons
 import { IMAGES, ROUTES } from "@/commons/commons";
-const { DASHBOARD, MY_QUOTES, MY_AUTHORS, SETTINGS, SIGN_OUT } = ROUTES;
+const { DASHBOARD, MY_QUOTES, QUOTE_ADD, MY_AUTHORS, AUTHOR_ADD, SETTINGS, SIGN_OUT } = ROUTES;
 
 export function SignInButton({
   setIsOpen,
@@ -26,10 +33,12 @@ export function SignInButton({
   const [isProfileSubMenuOpen, setIsProfileSubMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  const list = [
+  const routes = [
     { icon: <FaAddressCard />, label: "Dashboard", path: DASHBOARD },
     { icon: <FaFeather />, label: "My quotes", path: MY_QUOTES },
+    { icon: <FaPlus />, label: "Add a quote", path: QUOTE_ADD },
     { icon: <FaUserEdit />, label: "My authors", path: MY_AUTHORS },
+    { icon: <FaPlus />, label: "Add an author", path: AUTHOR_ADD },
     { icon: <GoGear />, label: "Settings", path: SETTINGS },
     { icon: <FaSignOutAlt />, label: "Sign out", path: SIGN_OUT },
   ];
@@ -85,8 +94,8 @@ export function SignInButton({
             className="absolute -bottom-2 translate-y-full min-w-max bg-transparent"
           >
             <ul className="flex flex-col gap-y-2 bg-white p-2 border-2 rounded-md shadow-md">
-              {list.map((item, index) => {
-                const isActive = pathname === item.path;
+              {routes.map((route, index) => {
+                const isActive = pathname === route.path;
 
                 return (
                   <li
@@ -96,8 +105,8 @@ export function SignInButton({
                     } py-1 px-3 rounded-lg duration-300 hover:bg-blue-300`}
                     onClick={() => handleClick()}
                   >
-                    <Link href={item.path} className="flex items-center gap-2">
-                      {item.icon} {item.label}
+                    <Link href={route.path} className="flex items-center gap-2">
+                      {route.icon} {route.label}
                     </Link>
                   </li>
                 );

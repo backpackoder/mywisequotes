@@ -1,8 +1,8 @@
 // Types
-import { Authors, Quote, Quotes } from "./API";
 import { Items } from "./navbar";
 import { DispatchQuotesAndAuthors } from "./authors";
-import { User } from "@prisma/client";
+import { User, UserSettings } from "@prisma/client";
+import { ManyData, PrismaAuthors, PrismaQuote, PrismaType } from "./prisma";
 
 // LAYOUT
 export type LayoutProps = {
@@ -48,7 +48,7 @@ export type NavbarItemsProps = {
 
 // NAVIGATION
 export type PaginationProps = {
-  data: Quotes | Authors;
+  data: PrismaQuote[] | PrismaAuthors[];
   state: any;
   dispatch: React.Dispatch<any>;
 };
@@ -68,7 +68,7 @@ export type InputAuthorProps = {
 };
 
 export type AuthorImgProps = {
-  author: string;
+  author: string | null;
   image?: {
     width?: number;
     height?: number;
@@ -77,7 +77,7 @@ export type AuthorImgProps = {
 
 // QUOTES
 export type QuoteItemProps = {
-  quote: Quote;
+  quote: PrismaQuote;
 };
 
 // USER PROFILE
@@ -93,9 +93,16 @@ export type UserProfilePartsProps = {
 };
 
 // SETTINGS
-export type SettingsItemProps = {
+export type UserItemProps = {
   type: keyof User;
   user: User;
+  handleModifiedData: () => void;
+  Component: JSX.Element;
+};
+
+export type UserSettingsItemProps = {
+  typeSettings: keyof UserSettings;
+  userSettings: UserSettings;
   handleModifiedData: () => void;
   Component: JSX.Element;
 };

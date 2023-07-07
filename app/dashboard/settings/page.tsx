@@ -2,35 +2,37 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { FaCamera } from "react-icons/fa";
 
 // Components
 import { AuthCheck } from "@/components/AuthCheck";
-import { UserDataEditor } from "../UserDataEditor";
+import { EmailUpdatesItem, ImageProfileItem, LanguageItem, UserItem } from "./Items";
 
 // Styles
 import { styles } from "@/app/assets/styles/styles";
-
-// Utils
-import toCapitalize from "@/utils/toCapitalize";
 
 // Commons
 import { IMAGES } from "@/commons/commons";
 
 // Types
-import { User } from "@prisma/client";
-import { SettingsItemProps } from "@/types/props";
+import { User, UserSettings } from "@prisma/client";
 
 export default function Settings() {
   const [user, setUser] = useState<User | null | undefined>(null);
+  const [userSettings, setUserSettings] = useState<UserSettings | null | undefined>(null);
   const [isRefresh, setIsRefresh] = useState(false);
 
   const data = {
-    username: user?.username,
-    name: user?.name ?? "Unknown",
-    image: user?.image ?? IMAGES.DEFAULT_PROFILE_IMAGE,
-    bio: user?.bio ?? "",
-    nationality: user?.nationality ?? "Unknown",
+    user: {
+      username: user?.username,
+      name: user?.name ?? "Unknown",
+      image: user?.image ?? IMAGES.DEFAULT_PROFILE_IMAGE,
+      bio: user?.bio ?? "",
+      nationality: user?.nationality ?? "Unknown",
+    },
+    settings: {
+      emailUpdates: userSettings?.emailUpdates ?? false,
+      language: userSettings?.language ?? "en",
+    },
   };
 
   function handleModifiedData() {
@@ -38,23 +40,28 @@ export default function Settings() {
   }
 
   useEffect(() => {
-    async function getUser() {
+    async function getSettings() {
       const res = await fetch("/api/user", {
         method: "GET",
       });
 
+      const resSettings = await fetch("/api/user/settings", {
+        method: "GET",
+      });
+
       const user: User | null | undefined = await res.json();
+      const userSettings: UserSettings | null | undefined = await resSettings.json();
 
       setUser(user);
-      console.log("user: ", user);
+      setUserSettings(userSettings);
     }
 
-    getUser();
+    getSettings();
   }, [isRefresh]);
 
   return (
     <AuthCheck>
-      {user && (
+      {user && userSettings && (
         <section className="flex flex-col items-center justify-center gap-8">
           <h2 className="font-semibold text-4xl">⚙️ Settings</h2>
 
@@ -67,8 +74,8 @@ export default function Settings() {
                 Component={
                   <div className="rounded-full">
                     <Image
-                      src={data.image}
-                      alt={`${data.name}'s profile`}
+                      src={data.user.image}
+                      alt={`${data.user.name}'s profile`}
                       width={300}
                       height={300}
                       className={`${styles.imgSquareCropped} rounded-full cursor-pointer`}
@@ -79,115 +86,49 @@ export default function Settings() {
             </div>
 
             <div className="flex flex-col items-start justify-center gap-2 max-w-500">
-              <SettingsItem
+              <UserItem
                 type="username"
                 user={user}
                 handleModifiedData={handleModifiedData}
-                Component={<p className="text-center">{data.username}</p>}
+                Component={<p className="text-center">{data.user.username}</p>}
               />
 
-              <SettingsItem
+              <UserItem
                 type="name"
                 user={user}
                 handleModifiedData={handleModifiedData}
-                Component={<p className="text-center">{data.name}</p>}
+                Component={<p className="text-center">{data.user.name}</p>}
               />
 
-              <SettingsItem
+              <UserItem
                 type="nationality"
                 user={user}
                 handleModifiedData={handleModifiedData}
-                Component={<p className="text-center">{data.nationality}</p>}
+                Component={<p className="text-center">{data.user.nationality}</p>}
               />
 
-              <SettingsItem
+              <UserItem
                 type="bio"
                 user={user}
                 handleModifiedData={handleModifiedData}
-                Component={<p>{data.bio}</p>}
+                Component={<p>{data.user.bio}</p>}
+              />
+
+              <LanguageItem
+                typeSettings="language"
+                userSettings={userSettings}
+                handleModifiedData={handleModifiedData}
+              />
+
+              <EmailUpdatesItem
+                typeSettings="emailUpdates"
+                userSettings={userSettings}
+                handleModifiedData={handleModifiedData}
               />
             </div>
           </article>
         </section>
       )}
     </AuthCheck>
-  );
-}
-
-function ImageProfileItem({ type, user, handleModifiedData, Component }: SettingsItemProps) {
-  const [isEditing, setIsEditing] = useState(false);
-
-  return (
-    <div className="flex flex-col flex-wrap gap-2">
-      <h3 className="font-semibold">{toCapitalize(type)}:</h3>
-      <div className="flex flex-col gap-4 py-2 px-4 border-2 rounded-lg">
-        <div
-          className={`group relative rounded-full ${isEditing ? "" : "hover:brightness-75"}`}
-          onClick={() => setIsEditing((prev) => !prev)}
-        >
-          {Component}
-
-          <FaCamera
-            size={50}
-            color="white"
-            className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ${
-              isEditing ? "hidden" : ""
-            } opacity-0 z-50 duration-150 group-hover:opacity-100`}
-          />
-        </div>
-
-        {isEditing && (
-          <div className="flex flex-col items-start justify-center gap-2">
-            <p className="font-semibold">Link:</p>
-            <UserDataEditor
-              type={type}
-              user={user}
-              setIsEditing={setIsEditing}
-              handleModifiedData={handleModifiedData}
-            />
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function SettingsItem({ type, user, Component, handleModifiedData }: SettingsItemProps) {
-  const [isEditing, setIsEditing] = useState(false);
-
-  return (
-    <div className="flex flex-col flex-wrap items-start gap-2 max-w-xs">
-      <h3 className="font-semibold">{toCapitalize(type)}:</h3>
-
-      <div className="py-2 px-4 rounded-lg border-2">
-        {isEditing ? (
-          <UserDataEditor
-            type={type}
-            user={user}
-            setIsEditing={setIsEditing}
-            handleModifiedData={handleModifiedData}
-          />
-        ) : (
-          Component
-        )}
-      </div>
-
-      {!isEditing && <ModifyButton setIsEditing={setIsEditing} />}
-    </div>
-  );
-}
-
-function ModifyButton({
-  setIsEditing,
-}: {
-  setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
-  return (
-    <button
-      className="bg-green-300 p-2 rounded-lg duration-150 hover:bg-green-400"
-      onClick={() => setIsEditing((prev) => !prev)}
-    >
-      Modify
-    </button>
   );
 }

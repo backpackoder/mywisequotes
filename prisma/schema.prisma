@@ -100,14 +100,15 @@ model Quote {
   createdAt       DateTime          @default(now())
   createdBy       User              @relation("createdQuotes", fields: [createdById], references: [id], onDelete: Cascade)
   createdById     String
-  updatedAt       DateTime          @updatedAt
-  updatedBy       User              @relation("updatedQuotes", fields: [updatedById], references: [id], onDelete: Cascade)
-  updatedById     String
+  updatedAt       DateTime?          @updatedAt
+  updatedBy       User[]             @relation("updatedQuotes")
 
   translations    QuoteTranslation[]
+  date            DateTime?
   author          Author            @relation(fields: [authorId], references: [id])
   authorId        String
   tags            Tag[]
+  sources          String[]
   
   favoritedBy     User[]
   favoritedById   String[]
@@ -131,7 +132,7 @@ model QuoteTranslation {
 }
 
 model Tag {
-  id              String            @id @default(cuid())
+  id              String   @id @default(cuid())
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   
@@ -142,14 +143,14 @@ model Tag {
 model TagTranslation {
   id              String   @id @default(cuid())
 
-  name            String  @unique
+  name            String
 
   tag             Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
   tagId           String
   language        Language @relation(fields: [languageId], references: [id])
   languageId      String
 
-  @@unique([tagId, languageId])
+  @@unique([name, languageId])
 }
 
 model Favorite {
@@ -219,6 +220,7 @@ model Author {
   updatedAt       DateTime            @updatedAt
 
   translations    AuthorTranslation[]
+  wikipediaLink   String?
 
   quotes          Quote[]
 }
@@ -244,7 +246,8 @@ model Language {
   updatedAt       DateTime @updatedAt
 
   code            String   @unique
-  name            String   @unique
+  nativeName      String   @unique
+  englishName     String   @unique
 
   quotes          QuoteTranslation[]
   tags            TagTranslation[]

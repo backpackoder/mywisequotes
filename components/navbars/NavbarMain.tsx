@@ -6,8 +6,8 @@ import { useState } from "react";
 import { FaHome, FaFeather, FaUserEdit, FaQuestion } from "react-icons/fa";
 
 // Components
-import Logo from "../Logo";
-import HamburgerMenu from "./HamburgerMenu";
+import { Logo } from "../Logo";
+import { HamburgerMenu } from "./HamburgerMenu";
 import { SignInButton } from "../AuthButtons";
 
 // Commons
@@ -17,7 +17,7 @@ const { HOME, QUOTES, AUTHORS, ABOUT } = ROUTES;
 // Types
 import { NavbarItemsProps } from "@/types/props";
 
-export default function NavbarMain() {
+export function NavbarMain() {
   const [isOpen, setIsOpen] = useState(false);
 
   const routes = [

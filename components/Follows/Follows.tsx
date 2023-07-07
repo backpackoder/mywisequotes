@@ -5,7 +5,7 @@ type FollowsProps = {
   id: string;
 };
 
-export default function Follows({ id }: FollowsProps) {
+export function Follows({ id }: FollowsProps) {
   const { followers, following } = getFollows(id);
 
   return (

@@ -3,7 +3,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 
 // Components
-import Searchbar from "../Searchbar";
+import { Searchbar } from "../Searchbar";
 
 // Utils
 import { getData } from "@/utils/getData";
@@ -24,7 +24,7 @@ export type Tag = {
   _id: string;
 };
 
-export default function Navbar({ type, totalCount, dispatch }: NavbarProps) {
+export function Navbar({ type, totalCount, dispatch }: NavbarProps) {
   const [tags, setTags] = useState<Tag[]>([]);
   const filters = getFilters({ type, tags });
 
@@ -44,7 +44,9 @@ export default function Navbar({ type, totalCount, dispatch }: NavbarProps) {
 
   return tags ? (
     <div className="flex flex-wrap justify-center gap-2 bg-sky-200 rounded-xl">
-      <p className="flex items-center">{totalCount} results</p>
+      <p className="flex items-center">
+        {totalCount} {totalCount === 1 ? "result" : "results"}
+      </p>
 
       {filters.map((filter, index) => {
         return (

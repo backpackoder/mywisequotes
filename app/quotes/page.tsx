@@ -1,38 +1,35 @@
 "use client";
 
-import React, { useEffect, useReducer, useState } from "react";
+import { useEffect, useMemo, useReducer, useState } from "react";
 
 // Components
-import Navbar from "@/components/navbars/Navbar";
-import Pagination from "@/components/Pagination";
+import { NoResultsFound } from "@/components/NoResultsFound";
+import { Navbar } from "@/components/navbars/Navbar";
+import { Pagination } from "@/components/Pagination";
 import { QuoteItem } from "@/components/quotes/QuoteItem";
 
-// Hooks
-import { getData } from "@/utils/getData";
-
 // Commons
-import { API_URL } from "@/commons/commons";
-import { NoResultsFound } from "@/components/NoResultsFound";
+import { FILTERS } from "@/commons/commons";
 
 // Types
-import { Quotes } from "@/types/API";
 import { Params } from "@/types/params";
+import { PrismaQuote, API, ManyData } from "@/types/prisma";
 import { DispatchQuotesAndAuthors } from "@/types/authors";
 
 export default function Quotes() {
-  const [quotes, setQuotes] = useState<Quotes | null>(null);
+  const [quotes, setQuotes] = useState<API<ManyData<PrismaQuote>>>(null);
 
-  const params: Params = {
-    url: API_URL.QUOTES,
-    maxLength: 1000,
-    minLength: 1,
-    tags: "",
-    author: "",
-    sortBy: "",
-    order: "asc",
-    limit: 20,
-    page: 1,
-  };
+  const params: Params = useMemo(() => {
+    return {
+      page: 1,
+      limit: 20,
+      sortBy: FILTERS.DEFAULT,
+      order: "asc",
+      language: FILTERS.DEFAULT,
+      author: FILTERS.DEFAULT,
+      tag: FILTERS.DEFAULT,
+    };
+  }, []);
 
   const [state, dispatch] = useReducer(reducer, params);
 
@@ -44,19 +41,30 @@ export default function Quotes() {
   }
 
   useEffect(() => {
-    getData(state).then((data) => setQuotes(data));
-  }, [state]);
+    async function fetchData() {
+      const res = await fetch(`/api/quotes/queries/${Object.values(params).join("/")}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      await res.json().then((data) => setQuotes(data));
+    }
+
+    fetchData();
+  }, [params]);
 
   return quotes ? (
     <section className="flex flex-col gap-2">
-      <Navbar type="quotes" totalCount={quotes.totalCount} dispatch={dispatch} />
+      <Navbar type="quotes" totalCount={quotes.count} dispatch={dispatch} />
 
-      {quotes.results.length > 0 ? (
+      {quotes.count > 0 ? (
         <>
-          <Pagination data={quotes} state={state} dispatch={dispatch} />
+          <Pagination data={quotes.data} state={state} dispatch={dispatch} />
 
           <article className="flex flex-col gap-2">
-            {quotes.results.map((quote, index) => {
+            {quotes.data?.map((quote, index) => {
               return (
                 <div key={index}>
                   <QuoteItem quote={quote} />
@@ -65,7 +73,7 @@ export default function Quotes() {
             })}
           </article>
 
-          <Pagination data={quotes} state={state} dispatch={dispatch} />
+          <Pagination data={quotes.data} state={state} dispatch={dispatch} />
         </>
       ) : (
         <NoResultsFound type="quotes" />

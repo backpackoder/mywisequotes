@@ -9,7 +9,7 @@ import { authOptions } from "@/utils/authOptions";
 import { ROUTES } from "@/commons/commons";
 
 // Types
-import UserProfile from "@/components/userProfile/UserProfile";
+import { UserProfile } from "@/components/userProfile/UserProfile";
 
 export default async function Dashboard() {
   const session = await getServerSession(authOptions);

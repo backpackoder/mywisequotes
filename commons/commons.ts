@@ -15,11 +15,11 @@ export const ROUTES = {
   // Others
   QUOTES: "/quotes",
   QUOTE: (slug: string) => `/quotes/${slug}`,
-  QUOTE_CREATE: "/quotes/create",
+  QUOTE_ADD: "/quotes/add",
   QUOTE_EDIT: (slug: string) => `/quotes/${slug}/edit`,
   AUTHORS: "/authors",
   AUTHOR: (slug: string) => `/authors/${slug}`,
-  AUTHOR_CREATE: "/authors/create",
+  AUTHOR_ADD: "/authors/add",
   AUTHOR_EDIT: (slug: string) => `/authors/${slug}/edit`,
   ABOUT: "/about",
   USERS: "/users",
@@ -55,6 +55,14 @@ export const API_URL = {
 
   // Get a list of all tags
   TAGS: `${API_URL_MAIN}/tags`,
+};
+
+// Prisma
+export const PRISMA = {};
+
+// Filters
+export const FILTERS = {
+  DEFAULT: "by-default",
 };
 
 // Images

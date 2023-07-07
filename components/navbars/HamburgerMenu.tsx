@@ -4,7 +4,7 @@ export type HamburgerMenuProps = {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function HamburgerMenu({ setIsOpen }: HamburgerMenuProps) {
+export function HamburgerMenu({ setIsOpen }: HamburgerMenuProps) {
   function hamburgerMenuLinesStyle({ top }: { top: string }) {
     return `absolute left-1/2 ${top} -translate-x-1/2 w-9/12 border-2 border-black rounded-lg`;
   }

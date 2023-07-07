@@ -1,5 +1,5 @@
 // Components
-import RandomQuote from "@/components/quotes/RandomQuote";
+import { RandomQuote } from "@/components/quotes/RandomQuote";
 import { DiscoverQuotesAndAuthors } from "@/components/DiscoverQuotesAndAuthors";
 
 export default async function Home() {

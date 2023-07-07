@@ -1,16 +1,17 @@
 import Image from "next/image";
 
 // Components
-import FollowButton from "../followBtn/FollowBtn";
+import { Follows } from "../Follows/Follows";
+import { FollowButton } from "../buttons/FollowBtn";
 import { DiscoverQuotesAndAuthors } from "../DiscoverQuotesAndAuthors";
-import { CreateQuote } from "../quotes/CreateQuote";
+import { AddQuote } from "../quotes/AddQuote";
 import { AddAuthor } from "../authors/AddAuthor";
 
 // Assets
-import moderator from "@/app/assets/images/roles/moderator.png";
-import admin from "@/app/assets/images/roles/admin.png";
-import owner from "@/app/assets/images/roles/owner.png";
 import { styles } from "@/app/assets/styles/styles";
+
+// Utils
+import { getRole } from "@/utils/getRole";
 
 // Commons
 import { IMAGES } from "@/commons/commons";
@@ -18,50 +19,21 @@ import { IMAGES } from "@/commons/commons";
 // Types
 import { User } from "@prisma/client";
 import { UserProfilePartsProps } from "@/types/props";
-import Follows from "../Follows/Follows";
 
 export type UserProfileProps = {
   user: User;
   isProfileMine: boolean;
 };
 
-export default function UserProfile({ user, isProfileMine }: UserProfileProps) {
+export function UserProfile({ user, isProfileMine }: UserProfileProps) {
   const data = {
     username: user?.username,
     name: user?.name ?? "Unknown",
     image: user?.image ?? IMAGES.DEFAULT_PROFILE_IMAGE,
     bio: user?.bio ?? "",
     nationality: user?.nationality ?? "Unknown",
-    role: getRole(),
+    role: getRole(user.role),
   };
-
-  function getRole() {
-    switch (user?.role) {
-      case "OWNER":
-        return (
-          <>
-            <Image src={owner} alt="Owner's badge" width={50} height={50} /> Owner
-          </>
-        );
-
-      case "ADMIN":
-        return (
-          <>
-            <Image src={admin} alt="Admin's badge" width={50} height={50} /> Admin
-          </>
-        );
-
-      case "MODERATOR":
-        return (
-          <>
-            <Image src={moderator} alt="Moderator's badge" width={50} height={50} /> Moderator
-          </>
-        );
-
-      default:
-        return null;
-    }
-  }
 
   return (
     <section className="flex flex-col items-center min-w-full p-0">
@@ -97,7 +69,7 @@ export default function UserProfile({ user, isProfileMine }: UserProfileProps) {
 
       {isProfileMine && (
         <article className="flex flex-wrap items-center justify-evenly gap-8 w-full p-4">
-          <CreateQuote />
+          <AddQuote />
           <AddAuthor />
         </article>
       )}
