@@ -2,7 +2,7 @@
 import { Items } from "./navbar";
 import { DispatchQuotesAndAuthors } from "./authors";
 import { User, UserSettings } from "@prisma/client";
-import { ManyData, PrismaAuthors, PrismaQuote, PrismaType } from "./prisma";
+import { ManyData, PrismaAuthors, PrismaQuote } from "./prisma";
 
 // LAYOUT
 export type LayoutProps = {
