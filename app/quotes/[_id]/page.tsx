@@ -23,7 +23,7 @@ export default async function Quote({ params }: { params: { _id: string } }) {
     return data;
   }
 
-  const data: any = await fetchData();
+  const data = await fetchData();
 
   return data ? (
     <section className="p-2 border-2">

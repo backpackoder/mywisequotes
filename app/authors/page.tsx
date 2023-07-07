@@ -18,6 +18,7 @@ import { API_URL } from "@/commons/commons";
 import { Params } from "@/types/params";
 import { Authors } from "@/types/API";
 import { DispatchQuotesAndAuthors } from "@/types/authors";
+import { API, ManyData, PrismaQuote } from "@/types/prisma";
 
 export default function Authors() {
   const params: Params = {
@@ -28,10 +29,9 @@ export default function Authors() {
     slug: "",
     sortBy: "",
     order: "asc",
-    tags: "",
   };
 
-  const [authors, setAuthors] = useState<Authors | null>(null);
+  const [authors, setAuthors] = useState<API<ManyData<PrismaQuote>>>(null);
 
   const [state, dispatch] = useReducer(reducer, params);
 
@@ -48,7 +48,7 @@ export default function Authors() {
 
   return authors ? (
     <section className="flex flex-col gap-2">
-      <Navbar type="authors" totalCount={authors.totalCount} dispatch={dispatch} />
+      {/* <Navbar type="authors" totalCount={authors.totalCount} dispatch={dispatch} />
 
       <Pagination data={authors} state={state} dispatch={dispatch} />
 
@@ -81,7 +81,7 @@ export default function Authors() {
         })}
       </article>
 
-      <Pagination data={authors} state={state} dispatch={dispatch} />
+      <Pagination data={authors} state={state} dispatch={dispatch} /> */}
     </section>
   ) : null;
 }
