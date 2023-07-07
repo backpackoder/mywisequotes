@@ -5,6 +5,9 @@ import { QuoteItem } from "@/components/quotes/QuoteItem";
 // Utils
 import { getData } from "@/utils/getData";
 
+// Commons
+import { API_URL } from "@/commons/commons";
+
 // Types
 import { Params } from "@/types/params";
 import { Author, Authors, Quotes } from "@/types/API";
@@ -13,6 +16,7 @@ export default async function Author({ params }: { params: { slug: string } }) {
   const { slug } = params;
 
   const authorsParams: Params = {
+    url: API_URL.AUTHORS,
     slug,
   };
 
@@ -51,9 +55,9 @@ export default async function Author({ params }: { params: { slug: string } }) {
             : `No quotes found from ${author.results[0].name}`}
         </h3>
 
-        {quotes.results.map((result, index) => {
+        {/* {quotes.results.map((result, index) => {
           return <QuoteItem key={index} quote={result} />;
-        })}
+        })} */}
       </div>
     </section>
   ) : (

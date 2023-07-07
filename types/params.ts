@@ -5,6 +5,7 @@ export type Params = {
   tag?: string;
   author?: string;
 
+  url?: string;
   slug?: string;
   limit?: number;
 
@@ -16,24 +17,3 @@ export type Params = {
 };
 
 export type ParamsKeys = keyof Params;
-
-// export type Params_RandomQuotes = {
-//   limit?: number;
-//   maxLength?: number;
-//   minLength?: number;
-//   tags?: string;
-//   author?: string;
-//   authorId?: string;
-// };
-
-// export type Params_ListQuotes = {
-//   limit?: number;
-//   maxLength?: number;
-//   minLength?: number;
-//   tags?: string;
-//   author?: string;
-//   authorId?: string;
-//   sortBy?: string;
-//   order?: string;
-//   page?: number;
-// };
