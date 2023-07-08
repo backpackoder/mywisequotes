@@ -16,7 +16,7 @@ import { Params } from "@/types/params";
 import { PrismaQuote, API, ManyData } from "@/types/prisma";
 import { DispatchQuotesAndAuthors } from "@/types/authors";
 
-export default function Quotes() {
+export default function Quotesaze() {
   const [quotes, setQuotes] = useState<API<ManyData<PrismaQuote>>>(null);
 
   const params: Params = useMemo(() => {
@@ -25,7 +25,7 @@ export default function Quotes() {
       limit: 20,
       sortBy: FILTERS.DEFAULT,
       order: "asc",
-      language: FILTERS.DEFAULT,
+      language: "en",
       author: FILTERS.DEFAULT,
       tag: FILTERS.DEFAULT,
     };
@@ -41,7 +41,7 @@ export default function Quotes() {
   }
 
   useEffect(() => {
-    async function fetchData() {
+    async function fetchQuotes() {
       const res = await fetch(`/api/quotes/queries/${Object.values(params).join("/")}`, {
         method: "GET",
         headers: {
@@ -52,33 +52,34 @@ export default function Quotes() {
       await res.json().then((data) => setQuotes(data));
     }
 
-    fetchData();
+    fetchQuotes();
   }, [params]);
 
-  return quotes ? (
-    <section className="flex flex-col gap-2">
-      <Navbar type="quotes" totalCount={quotes.count} dispatch={dispatch} />
+  return (
+    quotes && (
+      <section className="flex flex-col gap-2">
+        <Navbar type="quotes" totalCount={quotes.count} dispatch={dispatch} />
 
-      {quotes.count > 0 ? (
-        <>
-          <Pagination data={quotes.data} state={state} dispatch={dispatch} />
+        {quotes.data.length > 0 ? (
+          <>
+            <Pagination data={quotes.data} state={state} dispatch={dispatch} />
 
-          <article className="flex flex-col gap-2">
-            {quotes.data?.map((quote, index) => {
-              return (
-                <div key={index}>
-                  {/* @ts-expect-error Async Server Component */}
-                  <QuoteItem quote={quote} />
-                </div>
-              );
-            })}
-          </article>
+            <article className="flex flex-col gap-2">
+              {quotes.data.map((quote, index) => {
+                return (
+                  <div key={index}>
+                    <QuoteItem quote={quote} />
+                  </div>
+                );
+              })}
+            </article>
 
-          <Pagination data={quotes.data} state={state} dispatch={dispatch} />
-        </>
-      ) : (
-        <NoResultsFound type="quotes" />
-      )}
-    </section>
-  ) : null;
+            <Pagination data={quotes.data} state={state} dispatch={dispatch} />
+          </>
+        ) : (
+          <NoResultsFound type="quotes" />
+        )}
+      </section>
+    )
+  );
 }

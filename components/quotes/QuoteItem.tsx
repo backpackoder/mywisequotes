@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 // Components
+import { QuoteContainer } from "./QuoteContainer";
 import { QuoteIcons } from "./QuoteIcons";
 import { AuthorImg } from "./AuthorImg";
 
@@ -9,9 +10,8 @@ import { ROUTES } from "@/commons/commons";
 
 // Types
 import { QuoteItemProps } from "@/types/props";
-import { QuoteContainer } from "./QuoteContainer";
 
-export async function QuoteItem({ quote }: QuoteItemProps) {
+export function QuoteItem({ quote }: QuoteItemProps) {
   const creator = "My wise quotes";
 
   return quote ? (

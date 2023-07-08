@@ -6,8 +6,6 @@ import { FILTERS } from "@/commons/commons";
 import { PRISMA_CALLS } from "@/utils/prismaCalls";
 
 export async function GET(req: Request, { params }: { params: { queries: string[] } }) {
-  console.log("params GET authors queries", params);
-
   function defaultChecker(value: string) {
     return value === FILTERS.DEFAULT ? "" : value;
   }

@@ -27,6 +27,7 @@ export function AuthorImg({ author, image }: AuthorImgProps) {
       alt={author ? `${author}'s profile image` : "Default profile image"}
       width={image?.width ?? 100}
       height={image?.height ?? 0}
+      priority
       className="w-auto h-auto max-h-60 rounded-lg duration-300"
     />
   );

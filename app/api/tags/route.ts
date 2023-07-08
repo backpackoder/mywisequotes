@@ -2,13 +2,22 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(req: Request) {
-  const tag = await prisma.tag.findMany();
+  const tags = await prisma.tag.findMany({
+    include: {
+      translations: {
+        include: {
+          language: true,
+        },
+      },
+      quotes: true,
+    },
+  });
 
-  const count = tag.length;
+  const count = tags.length;
 
   const data = {
     count,
-    data: tag,
+    data: tags,
   };
 
   return NextResponse.json(data);

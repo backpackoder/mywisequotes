@@ -12,15 +12,6 @@ import { getFilters } from "@/utils/getFilters";
 import { NavbarProps } from "@/types/props";
 import { API, ManyData, PrismaTag } from "@/types/prisma";
 
-export type Tag = {
-  dateAdded: string;
-  dateModified: string;
-  name: string;
-  quoteCount: number;
-  slug: string;
-  _id: string;
-};
-
 export function Navbar({ type, totalCount, dispatch }: NavbarProps) {
   const [tags, setTags] = useState<API<ManyData<PrismaTag>>>(null);
   const filters = tags && getFilters({ type, tags: tags.data });

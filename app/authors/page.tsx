@@ -13,21 +13,21 @@ import { FILTERS } from "@/commons/commons";
 
 // Types
 import { Params } from "@/types/params";
-import { API, ManyData, PrismaAuthors } from "@/types/prisma";
+import { API, ManyData, PrismaAuthor } from "@/types/prisma";
 import { DispatchQuotesAndAuthors } from "@/types/authors";
 
 export default function Authors() {
+  const [authors, setAuthors] = useState<API<ManyData<PrismaAuthor>>>(null);
+
   const params: Params = useMemo(() => {
     return {
       page: 1,
       limit: 20,
       sortBy: FILTERS.DEFAULT,
       order: "asc",
-      language: "fr",
+      language: "en",
     };
   }, []);
-
-  const [authors, setAuthors] = useState<API<ManyData<PrismaAuthors>>>(null);
 
   const [state, dispatch] = useReducer(reducer, params);
 
@@ -40,14 +40,14 @@ export default function Authors() {
 
   useEffect(() => {
     async function fetchAuthors() {
-      const data = await fetch(`api/authors/queries/${Object.values(params).join("/")}`, {
+      const res = await fetch(`api/authors/queries/${Object.values(params).join("/")}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
       });
 
-      await data.json().then((data) => setAuthors(data));
+      await res.json().then((data) => setAuthors(data));
     }
 
     fetchAuthors();

@@ -68,5 +68,7 @@ export const FILTERS = {
 // Images
 export const IMAGES = {
   DEFAULT_PROFILE_IMAGE: "/no-profile-image.webp",
-  NOT_FOUND_PROFILE_IMAGE: "/authorImgNotFound.jpg",
+  // NOT_FOUND_PROFILE_IMAGE: "/authorImgNotFound.jpg",
+  // PROVISOIRE
+  NOT_FOUND_PROFILE_IMAGE: "/no-profile-image.webp",
 };

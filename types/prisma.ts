@@ -58,13 +58,13 @@ export interface PrismaTagTranslation extends TagTranslation {
   language: Language;
 }
 
-export interface PrismaAuthorsTranslation extends AuthorTranslation {
-  language: Language;
+export interface PrismaAuthor extends Author {
+  translations: PrismaAuthorTranslation[];
+  quotes: Quote[];
 }
 
-export interface PrismaAuthors extends Author {
-  translations: PrismaAuthorsTranslation[];
-  quotes: Quote[];
+export interface PrismaAuthorTranslation extends AuthorTranslation {
+  language: Language;
 }
 
 export interface PrismaLanguage extends Language {

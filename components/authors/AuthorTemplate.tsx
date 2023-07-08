@@ -4,10 +4,10 @@ import { AuthorImg } from "../quotes/AuthorImg";
 import { QuoteItem } from "../quotes/QuoteItem";
 
 // Types
-import { PrismaAuthors } from "@/types/prisma";
+import { PrismaAuthor } from "@/types/prisma";
 
 type AuthorTemplateProps = {
-  author?: PrismaAuthors;
+  author?: PrismaAuthor;
   wikiData: WikiAuthorDatas;
 };
 
@@ -37,7 +37,7 @@ export function AuthorTemplate({ author, wikiData }: AuthorTemplateProps) {
 }
 
 type QuotesOfTheAuthorProps = {
-  author: PrismaAuthors;
+  author: PrismaAuthor;
 };
 
 function QuotesOfTheAuthor({ author }: QuotesOfTheAuthorProps) {

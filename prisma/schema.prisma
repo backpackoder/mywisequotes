@@ -219,7 +219,7 @@ model Author {
   createdAt       DateTime            @default(now())
   updatedAt       DateTime            @updatedAt
 
-  englishName     String?            @unique
+  englishName     String            @unique
   translations    AuthorTranslation[]
   wikipediaLink   String?
 
@@ -229,7 +229,7 @@ model Author {
 model AuthorTranslation {
   id              String   @id @default(cuid())
   
-  name            String   @unique
+  name            String
   description     String?
   bio             String?
   isOriginal      Boolean  @default(false)

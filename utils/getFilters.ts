@@ -65,8 +65,8 @@ export function getFilters({ type, tags }: { type: string; tags: PrismaTag[] }) 
         others: [
           { value: "", label: "all" },
           ...tags.map((tag) => ({
-            value: tag.translations[0].name,
-            label: tag.translations[0].name,
+            value: tag.translations[0]?.name,
+            label: tag.translations[0]?.name,
           })),
         ],
       },

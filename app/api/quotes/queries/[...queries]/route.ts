@@ -5,8 +5,6 @@ import { prisma } from "@/lib/prisma";
 import { FILTERS } from "@/commons/commons";
 
 export async function GET(req: Request, { params }: { params: { queries: string[] } }) {
-  console.log("params", params);
-
   function defaultChecker(value: string) {
     return value === FILTERS.DEFAULT ? "" : value;
   }
@@ -19,47 +17,49 @@ export async function GET(req: Request, { params }: { params: { queries: string[
   const author = defaultChecker(params.queries[5]);
   const tag = defaultChecker(params.queries[6]);
 
-  const where = {
-    translations: {
-      some: {
-        language: {
-          code: {
-            startsWith: language,
-            endsWith: language,
-          },
-        },
-      },
-    },
-
-    tags:
-      tag.length > 0
-        ? {
-            some: {
-              translations: {
-                some: {
-                  name: {
-                    startsWith: tag,
-                    endsWith: tag,
-                  },
-                },
+  const where = language
+    ? {
+        translations: {
+          some: {
+            language: {
+              code: {
+                startsWith: language,
+                endsWith: language,
               },
             },
-          }
-        : undefined,
-
-    author: {
-      translations: {
-        some: {
-          name: {
-            startsWith: author,
-            endsWith: author,
           },
         },
-      },
-    },
-  };
 
-  const quote = await prisma.quote.findMany({
+        tags:
+          tag.length > 0
+            ? {
+                some: {
+                  translations: {
+                    some: {
+                      name: {
+                        startsWith: tag,
+                        endsWith: tag,
+                      },
+                    },
+                  },
+                },
+              }
+            : undefined,
+
+        author: {
+          translations: {
+            some: {
+              name: {
+                startsWith: author,
+                endsWith: author,
+              },
+            },
+          },
+        },
+      }
+    : undefined;
+
+  const quotes = await prisma.quote.findMany({
     where,
 
     include: {
@@ -132,11 +132,11 @@ export async function GET(req: Request, { params }: { params: { queries: string[
     take: Number(limit),
   });
 
-  const count = quote.length;
+  const count = quotes.length;
 
   const data = {
     count,
-    data: quote,
+    data: quotes,
   };
 
   return NextResponse.json(data);

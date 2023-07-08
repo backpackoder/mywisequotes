@@ -1,48 +1,29 @@
 "use client";
 
 import Link from "next/link";
-import React, { useEffect, useMemo, useReducer, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 
 // Components
 import { NoResultsFound } from "./NoResultsFound";
 
-// Utils
-import { getData } from "@/utils/getData";
-
-// Commons
-import { API_URL } from "@/commons/commons";
-
 // Types
-import { Authors, Quotes } from "@/types/API";
-import { Params } from "@/types/params";
 import { SearchbarProps } from "@/types/searchbar";
+import { Params } from "@/types/params";
 import { DispatchQuotesAndAuthors } from "@/types/authors";
+import { API, ManyData, PrismaAuthor, PrismaQuote } from "@/types/prisma";
 
 export function Searchbar({ type }: SearchbarProps) {
-  const [searchQuote, setSearchQuote] = useState<Quotes | null>(null);
-  const [searchAuthor, setSearchAuthor] = useState<Authors | null>(null);
-
-  const url = useMemo(() => {
-    switch (type) {
-      case "quotes":
-        return API_URL.SEARCH_QUOTES;
-
-      case "authors":
-        return API_URL.SEARCH_AUTHORS;
-
-      default:
-        throw new Error(`Invalid type at Searchbar: ${type}`);
-    }
-  }, [type]);
+  const [searchQuote, setSearchQuote] = useState<API<ManyData<PrismaQuote>> | null>(null);
+  const [searchAuthor, setSearchAuthor] = useState<API<ManyData<PrismaAuthor>> | null>(null);
+  console.log("searchQuote", searchQuote);
+  console.log("searchAuthor", searchAuthor);
 
   const params: Params = {
-    url,
-
     query: "",
-    fields: type === "quotes" ? "quote,author" : undefined,
   };
 
   const [state, dispatch] = useReducer(reducer, params);
+  console.log("state", state);
 
   function reducer(state: Params, action: DispatchQuotesAndAuthors) {
     return {
@@ -57,13 +38,25 @@ export function Searchbar({ type }: SearchbarProps) {
 
   useEffect(() => {
     async function fetchQuotes() {
-      const data: Quotes = await getData(state);
-      setSearchQuote(data);
+      const data = await fetch(`/api/quotes/contents/${state.query}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      await data.json().then((data) => setSearchQuote(data));
     }
 
     async function fetchAuthors() {
-      const data: Authors = await getData(state);
-      setSearchAuthor(data);
+      const data = await fetch(`/api/authors/names/${state.query}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      await data.json().then((data) => setSearchAuthor(data));
     }
 
     state.query !== "" && (type === "quotes" ? fetchQuotes() : fetchAuthors());
@@ -93,16 +86,15 @@ export function Searchbar({ type }: SearchbarProps) {
   );
 }
 
-function SearchQuote({ type, searchQuote }: { type: string; searchQuote: Quotes }) {
-  console.log("searchQuote.results.length", searchQuote.results.length);
-  return searchQuote.results.length > 0 ? (
+function SearchQuote({ type, searchQuote }: { type: string; searchQuote: ManyData<PrismaQuote> }) {
+  return searchQuote.count > 0 ? (
     <>
-      {searchQuote.results.map((result, index) => {
+      {searchQuote.data.map((quote, index) => {
         return (
           <div key={index}>
-            <Link href={`/${type}/${result._id}`}>{result.content} </Link>
-            <Link href={`/authors/${result.authorSlug}`}>
-              <small>({result.author})</small>
+            <Link href={`/${type}/${quote.id}`}>{quote.translations[0].content} </Link>
+            <Link href={`/authors/${quote.author.englishName}`}>
+              <small>({quote.author.translations[0].name})</small>
             </Link>
           </div>
         );
@@ -113,15 +105,24 @@ function SearchQuote({ type, searchQuote }: { type: string; searchQuote: Quotes 
   );
 }
 
-function SearchAuthor({ type, searchAuthor }: { type: string; searchAuthor: Authors }) {
-  return searchAuthor.results.length > 0 ? (
+function SearchAuthor({
+  type,
+  searchAuthor,
+}: {
+  type: string;
+  searchAuthor: ManyData<PrismaAuthor>;
+}) {
+  console.log("searchAuthor.count", searchAuthor.count);
+  console.log("searchAuthor.data", searchAuthor.data);
+
+  return searchAuthor.count > 0 ? (
     <>
-      {searchAuthor.results.map((result, index) => {
+      {searchAuthor.data.map((author, index) => {
         return (
-          <Link key={index} href={`/${type}/${result.slug}`}>
-            {result.name}{" "}
+          <Link key={index} href={`/${type}/${author.englishName}`}>
+            {author.englishName}{" "}
             <small>
-              ({result.quoteCount} {result.quoteCount === 1 ? "quote" : "quotes"})
+              ({searchAuthor.count} {searchAuthor.count === 1 ? "quote" : "quotes"})
             </small>
           </Link>
         );

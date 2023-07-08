@@ -10,8 +10,8 @@ export async function GET(req: Request) {
   const count = quote.length;
 
   const data = {
-    data: quote,
     count,
+    data: quote,
   };
 
   return NextResponse.json(data);
