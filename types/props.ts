@@ -2,7 +2,7 @@
 import { Items } from "./navbar";
 import { DispatchQuotesAndAuthors } from "./authors";
 import { User, UserSettings } from "@prisma/client";
-import { PrismaAuthors, PrismaQuote } from "./prisma";
+import { PrismaAuthor, PrismaQuote } from "./prisma";
 
 // LAYOUT
 export type LayoutProps = {
@@ -48,7 +48,7 @@ export type NavbarItemsProps = {
 
 // NAVIGATION
 export type PaginationProps = {
-  data: PrismaQuote[] | PrismaAuthors[];
+  data: PrismaQuote[] | PrismaAuthor[];
   state: any;
   dispatch: React.Dispatch<any>;
 };

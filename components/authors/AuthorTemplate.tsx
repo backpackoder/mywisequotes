@@ -54,7 +54,6 @@ function QuotesOfTheAuthor({ author }: QuotesOfTheAuthorProps) {
       {author.quotes.map((quote, index) => {
         return (
           <>
-            {/* @ts-expect-error Async Server Component */}
             <QuoteItem key={index} quote={quote} />
           </>
         );
