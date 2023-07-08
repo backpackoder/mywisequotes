@@ -1,8 +1,11 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useState } from "react";
 import { FaEdit, FaHeart } from "react-icons/fa";
+
+// Components
+import { HelpInHover } from "../HelpInHover";
 
 // Commons
 import { ROUTES } from "@/commons/commons";
@@ -24,19 +27,16 @@ export function QuoteIcons({ quote }: QuoteIconsProps) {
 }
 
 function EditIcon({ quote }: QuoteIconsProps) {
-  const router = useRouter();
-
-  function redirect() {
-    router.push(ROUTES.QUOTE_EDIT(quote.id));
-  }
-
   return (
-    <FaEdit
-      size="1.5rem"
-      color="lightgrey"
-      className="duration-150 cursor-pointer hover:scale-125"
-      onClick={() => redirect()}
-    />
+    <Link href={ROUTES.QUOTE_EDIT(quote.id)} className="relative group">
+      <FaEdit
+        size="1.5rem"
+        color="lightgrey"
+        className="duration-150 cursor-pointer hover:scale-125"
+      />
+
+      <HelpInHover text="Edit" />
+    </Link>
   );
 }
 
@@ -45,15 +45,19 @@ function FavIcon() {
 
   function addedToFavs(e: React.MouseEvent<SVGElement, MouseEvent>) {
     e.stopPropagation();
-    setIsFav(!isFav);
+    setIsFav((prev) => !prev);
   }
 
   return (
-    <FaHeart
-      size="1.5rem"
-      color={isFav ? "red" : "lightgrey"}
-      className="duration-150 cursor-pointer hover:scale-125"
-      onClick={(e) => addedToFavs(e)}
-    />
+    <div className="relative group">
+      <FaHeart
+        size="1.5rem"
+        color={isFav ? "red" : "lightgrey"}
+        className="duration-150 cursor-pointer hover:scale-125"
+        onClick={(e) => addedToFavs(e)}
+      />
+
+      <HelpInHover text="Add to favorites" />
+    </div>
   );
 }

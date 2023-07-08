@@ -4,12 +4,14 @@ import { Dispatch, useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa";
 
 // Components
+import { EditorWrapper } from "@/components/add/EditorWrapper";
+import { EditorItemWrapper } from "@/components/add/EditorItemWrapper";
 import { AddBtn } from "@/components/buttons/AddBtn";
 
 // Types
 import { Tag, TagTranslation } from "@prisma/client";
 import { Action, State } from "./page";
-import { API, PrismaLanguage } from "@/types/prisma";
+import { PrismaLanguage } from "@/types/prisma";
 
 export type EditorProps = {
   translations: PrismaLanguage[];
@@ -19,24 +21,12 @@ export type EditorProps = {
 
 export function Editor({ translations, state, dispatch }: EditorProps) {
   return translations ? (
-    <article className="border-4">
-      <h2 className="text-2xl">Editor</h2>
-
-      <div className="flex flex-wrap justify-center gap-8">
-        <LanguageAndContent translations={translations} state={state} dispatch={dispatch} />
-        <Author author={state.author} dispatch={dispatch} />
-        {/* <Tags translations={translations} state={state} dispatch={dispatch} /> */}
-      </div>
-    </article>
+    <EditorWrapper>
+      <LanguageAndContent translations={translations} state={state} dispatch={dispatch} />
+      <Author author={state.author} dispatch={dispatch} />
+      {/* <Tags translations={translations} state={state} dispatch={dispatch} /> */}
+    </EditorWrapper>
   ) : null;
-}
-
-function EditorItemWrapper({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="flex flex-col items-center gap-4 max-w-xs p-2 border-2 rounded-lg">
-      {children}
-    </div>
-  );
 }
 
 type LanguageAndContentProps = {
@@ -48,7 +38,9 @@ type LanguageAndContentProps = {
 function LanguageAndContent({ translations, state, dispatch }: LanguageAndContentProps) {
   const { language, originalLanguage, contents } = state;
 
-  const contentIndexFinder = translations?.findIndex((content) => content.code === language);
+  const contentIndexFinder = translations?.findIndex(
+    (translation) => translation.code === language
+  );
   console.log("contentIndexFinder", contentIndexFinder);
 
   function handleContent(e: React.ChangeEvent<HTMLTextAreaElement>) {

@@ -1,36 +1,41 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { useEffect, useReducer, useState } from "react";
 
 // Components
 import { AuthCheck } from "@/components/AuthCheck";
 import { Preview } from "./Preview";
 import { Editor } from "./Editor";
-import { SubmitBtn } from "./SubmitBtn";
+
+// Utils
+import { getWikiData } from "@/utils/getWikiData";
+
+// Types
 import { API, ManyData, PrismaLanguage, PrismaUser } from "@/types/prisma";
+import { wikiSummary } from "@/types/wikiResponse";
 
 const initialState = {
   language: "en",
   originalLanguage: null as string | null,
-  contents: [] as ContentTranslation[],
-  author: null as string | null,
-  tags: [] as string[],
+  wikiData: null as API<wikiSummary>,
+  names: [] as NameTranslation[],
 };
 
 export type State = typeof initialState;
 export type Action =
   | { type: "SET_LANGUAGE"; payload: string }
   | { type: "SET_ORIGINAL_LANGUAGE"; payload: string }
-  | { type: "SET_CONTENTS"; payload: ContentTranslation[] }
-  | { type: "SET_AUTHOR"; payload: string }
-  | { type: "SET_TAGS"; payload: string }
-  | { type: "DELETE_TAG"; payload: string };
-export type ContentTranslation = {
+  | { type: "SET_WIKI_DATA"; payload: API<wikiSummary> }
+  | { type: "SET_NAMES"; payload: NameTranslation[] };
+export type NameTranslation = {
   code: string;
-  content: string;
+  name: string;
 };
 
-export default function AddQuote() {
+export default function AddAuthor() {
+  const queryParams = useSearchParams().get("author");
+
   const [user, setUser] = useState<API<PrismaUser>>(null);
   const [translations, setTranslations] = useState<API<ManyData<PrismaLanguage>>>(null);
 
@@ -41,26 +46,24 @@ export default function AddQuote() {
     switch (action.type) {
       case "SET_LANGUAGE":
         return { ...state, language: action.payload };
+
       case "SET_ORIGINAL_LANGUAGE":
         return { ...state, originalLanguage: action.payload };
-      case "SET_CONTENTS":
-        return { ...state, contents: action.payload };
-      case "SET_AUTHOR":
-        return { ...state, author: action.payload };
-      case "SET_TAGS":
-        return { ...state, tags: [...state.tags, action.payload] };
-      case "DELETE_TAG":
-        return { ...state, tags: state.tags.filter((tag) => tag !== action.payload) };
+
+      case "SET_WIKI_DATA":
+        return { ...state, wikiData: action.payload };
+
+      case "SET_NAMES":
+        return { ...state, names: action.payload };
+
       default:
         return state;
     }
   }
 
-  async function addQuote() {}
+  async function addAuthor() {}
 
-  const contentIndexFinder = state.contents?.findIndex(
-    (content) => content.code === state.language
-  );
+  const nameIndexFinder = state.names?.findIndex((name) => name.code === state.language);
 
   useEffect(() => {
     async function fetchDatas() {
@@ -81,25 +84,38 @@ export default function AddQuote() {
   useEffect(() => {
     translations &&
       dispatch({
-        type: "SET_CONTENTS",
+        type: "SET_NAMES",
         payload: translations.data.map((translation) => {
-          return { code: translation.code, content: "" };
+          return { code: translation.code, name: "" };
         }),
       });
   }, [translations]);
 
+  useEffect(() => {
+    async function searchAuthor() {
+      queryParams &&
+        (await getWikiData(queryParams).then((res) => {
+          function isOk(response: boolean) {
+            dispatch({
+              type: "SET_WIKI_DATA",
+              payload: response ? res : undefined,
+            });
+          }
+          isOk(!!res);
+        }));
+    }
+
+    searchAuthor();
+  }, [queryParams]);
+
   return (
     user &&
     translations &&
-    state.contents.length > 0 &&
-    (contentIndexFinder || contentIndexFinder === 0) && (
+    state.names.length > 0 &&
+    (nameIndexFinder || nameIndexFinder === 0) && (
       <AuthCheck>
         <section className="flex flex-col gap-4">
-          <Preview
-            content={state.contents[contentIndexFinder]?.content ?? ""}
-            author={state.author ?? undefined}
-            username={user.username}
-          />
+          <Preview state={state} />
           <Editor translations={translations.data} state={state} dispatch={dispatch} />
           {/* <SubmitBtn addQuote={addQuote} /> */}
         </section>

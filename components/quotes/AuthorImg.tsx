@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 
 // Utils
-import { getImgFromWiki } from "@/utils/getImgFromWiki";
+import { getWikiData } from "@/utils/getWikiData";
 
 // Commons
 import { IMAGES } from "@/commons/commons";
@@ -18,7 +18,7 @@ export function AuthorImg({ author, image }: AuthorImgProps) {
   const [wikipedia, setWikipedia] = useState<API<wikiSummary>>(null);
 
   useEffect(() => {
-    author && getImgFromWiki(author).then((data) => setWikipedia(data));
+    author && getWikiData(author).then((data) => setWikipedia(data));
   }, [author]);
 
   return (

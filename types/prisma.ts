@@ -35,8 +35,8 @@ export interface PrismaQuote extends Quote {
   translations: PrismaQuoteTranslation[];
   author: Author & { translations: AuthorTranslation[] & { language: Language } };
   tags: Tag[] & { translations: TagTranslation[] & { language: Language } };
-  favoritedBy: User[];
   favorites: Favorite[];
+  favoritedBy: User[];
   comments: Comment[] & {
     user: User;
     likes: CommentLike[] & { user: User };
@@ -48,10 +48,27 @@ export interface PrismaQuoteTranslation extends QuoteTranslation {
   language: Language;
 }
 
+export interface PrismaTag extends Tag {
+  translations: PrismaTagTranslation[];
+  language: Language;
+  quotes: Quote[];
+}
+
+export interface PrismaTagTranslation extends TagTranslation {
+  language: Language;
+}
+
+export interface PrismaAuthorsTranslation extends AuthorTranslation {
+  language: Language;
+}
+
+export interface PrismaAuthors extends Author {
+  translations: PrismaAuthorsTranslation[];
+  quotes: Quote[];
+}
+
 export interface PrismaLanguage extends Language {
   quotes: Quote[];
   tags: Tag[];
   authors: Author[];
 }
-
-export interface PrismaAuthors extends Author {}

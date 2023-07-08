@@ -219,6 +219,7 @@ model Author {
   createdAt       DateTime            @default(now())
   updatedAt       DateTime            @updatedAt
 
+  englishName     String?            @unique
   translations    AuthorTranslation[]
   wikipediaLink   String?
 
@@ -229,7 +230,9 @@ model AuthorTranslation {
   id              String   @id @default(cuid())
   
   name            String   @unique
-  isOriginal      Boolean
+  description     String?
+  bio             String?
+  isOriginal      Boolean  @default(false)
 
   author          Author   @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId        String

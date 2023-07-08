@@ -1,27 +1,27 @@
+import { prisma } from "@/lib/prisma";
+
 // Components
 import { QuoteItem } from "./QuoteItem";
 
-// Types
-import { Params } from "@/types/params";
-import { Quote } from "@/types/API";
+// Utils
+import { PRISMA_CALLS } from "@/utils/prismaCalls";
 
-// Hooks
-import { getData } from "@/utils/getData";
+export async function getPrismaCalls() {
+  const prisma_quote_all = prisma.quote.findMany({
+    include: PRISMA_CALLS.quotes.include,
+  });
 
-// Commons
-import { API_URL } from "@/commons/commons";
+  return await prisma_quote_all;
+}
 
 export async function RandomQuote() {
-  const params: Params = {
-    url: API_URL.QUOTES_RANDOM,
-
-    limit: 1,
-  };
-
-  const quote: Quote[] = await getData(params);
+  const quote = await prisma.quote.findMany({
+    include: PRISMA_CALLS.quotes.include,
+  });
 
   return quote ? (
     <article className="flex items-center justify-center w-full p-4">
+      {/* @ts-expect-error Async Server Component */}
       <QuoteItem quote={quote[0]} />
     </article>
   ) : null;

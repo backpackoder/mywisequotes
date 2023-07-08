@@ -2,7 +2,7 @@
 import { Items } from "./navbar";
 import { DispatchQuotesAndAuthors } from "./authors";
 import { User, UserSettings } from "@prisma/client";
-import { ManyData, PrismaAuthors, PrismaQuote } from "./prisma";
+import { PrismaAuthors, PrismaQuote } from "./prisma";
 
 // LAYOUT
 export type LayoutProps = {
@@ -68,7 +68,7 @@ export type InputAuthorProps = {
 };
 
 export type AuthorImgProps = {
-  author: string | null;
+  author?: string;
   image?: {
     width?: number;
     height?: number;
@@ -77,7 +77,8 @@ export type AuthorImgProps = {
 
 // QUOTES
 export type QuoteItemProps = {
-  quote: PrismaQuote;
+  // quote: PrismaQuote;
+  quote: any;
 };
 
 // USER PROFILE

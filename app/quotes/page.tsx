@@ -67,6 +67,7 @@ export default function Quotes() {
             {quotes.data?.map((quote, index) => {
               return (
                 <div key={index}>
+                  {/* @ts-expect-error Async Server Component */}
                   <QuoteItem quote={quote} />
                 </div>
               );

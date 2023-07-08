@@ -2,12 +2,16 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(req: Request) {
-  const tag = await prisma.tag.findMany({
-    // orderBy: {
-    // },
-  });
+  const tag = await prisma.tag.findMany();
 
-  return NextResponse.json(tag);
+  const count = tag.length;
+
+  const data = {
+    count,
+    data: tag,
+  };
+
+  return NextResponse.json(data);
 }
 
 export async function POST(req: Request) {

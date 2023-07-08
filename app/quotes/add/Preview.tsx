@@ -1,20 +1,19 @@
 "use client";
 
 // Components
+import { PreviewWrapper } from "@/components/add/PreviewWrapper";
 import { QuoteContainer } from "@/components/quotes/QuoteContainer";
 import { AuthorImg } from "@/components/quotes/AuthorImg";
 
 export type PreviewProps = {
   content: string;
-  author: string | null;
+  author?: string;
   username: string;
 };
 
 export function Preview({ content, author, username }: PreviewProps) {
   return (
-    <article className="border-4">
-      <h2 className="text-2xl">Preview</h2>
-
+    <PreviewWrapper>
       <QuoteContainer>
         <p>{`- "${content}."`}</p>
 
@@ -26,6 +25,6 @@ export function Preview({ content, author, username }: PreviewProps) {
           Created by <span className="font-bold">@{username}</span>
         </p>
       </QuoteContainer>
-    </article>
+    </PreviewWrapper>
   );
 }

@@ -1,19 +1,16 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 // Components
 import { Searchbar } from "../Searchbar";
 
 // Utils
-import { getData } from "@/utils/getData";
 import { getFilters } from "@/utils/getFilters";
-
-// Commons
-import { API_URL } from "@/commons/commons";
 
 // Types
 import { NavbarProps } from "@/types/props";
+import { API, ManyData, PrismaTag } from "@/types/prisma";
 
 export type Tag = {
   dateAdded: string;
@@ -25,24 +22,29 @@ export type Tag = {
 };
 
 export function Navbar({ type, totalCount, dispatch }: NavbarProps) {
-  const [tags, setTags] = useState<Tag[]>([]);
-  const filters = getFilters({ type, tags });
-
-  const tagsUrl = useMemo(() => {
-    return {
-      url: API_URL.TAGS,
-    };
-  }, []);
+  const [tags, setTags] = useState<API<ManyData<PrismaTag>>>(null);
+  const filters = tags && getFilters({ type, tags: tags.data });
 
   function handleSelectChange(e: React.ChangeEvent<HTMLSelectElement>, title: string) {
     dispatch({ type: title, payload: e.target.value });
   }
 
   useEffect(() => {
-    getData(tagsUrl).then((data) => setTags(data));
-  }, [tagsUrl]);
+    async function fetchData() {
+      const data = await fetch("api/tags", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-  return tags ? (
+      await data.json().then((data) => setTags(data));
+    }
+
+    fetchData();
+  }, []);
+
+  return tags && filters ? (
     <div className="flex flex-wrap justify-center gap-2 bg-sky-200 rounded-xl">
       <p className="flex items-center">
         {totalCount} {totalCount === 1 ? "result" : "results"}

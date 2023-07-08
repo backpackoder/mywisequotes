@@ -1,7 +1,7 @@
 // Types
-import { Tag } from "@/components/navbars/Navbar";
+import { PrismaTag } from "@/types/prisma";
 
-export function getFilters({ type, tags }: { type: string; tags: Tag[] }) {
+export function getFilters({ type, tags }: { type: string; tags: PrismaTag[] }) {
   const limit = {
     title: "limit",
     label: "Results per page",
@@ -64,7 +64,10 @@ export function getFilters({ type, tags }: { type: string; tags: Tag[] }) {
         default: { value: "", label: "all" },
         others: [
           { value: "", label: "all" },
-          ...tags.map((tag) => ({ value: tag.name, label: tag.name })),
+          ...tags.map((tag) => ({
+            value: tag.translations[0].name,
+            label: tag.translations[0].name,
+          })),
         ],
       },
     });

@@ -11,7 +11,7 @@ import { ROUTES } from "@/commons/commons";
 import { QuoteItemProps } from "@/types/props";
 import { QuoteContainer } from "./QuoteContainer";
 
-export function QuoteItem({ quote }: QuoteItemProps) {
+export async function QuoteItem({ quote }: QuoteItemProps) {
   const creator = "My wise quotes";
 
   return quote ? (
@@ -19,7 +19,7 @@ export function QuoteItem({ quote }: QuoteItemProps) {
       <QuoteIcons quote={quote} />
 
       <Link href={ROUTES.QUOTE(quote.id)} className="cursor-pointer hover:text-[#a3a3a3]">
-        {`"${quote.translations[0].content}"`}
+        {`- "${quote.translations[0].content}."`}
       </Link>
 
       <AuthorImg author={quote.author.translations[0].name} image={{ width: 100 }} />
