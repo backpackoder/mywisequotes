@@ -15,26 +15,31 @@ import { getWikiData } from "@/utils/getWikiData";
 import { API, ManyData, PrismaLanguage, PrismaUser } from "@/types/prisma";
 import { wikiSummary } from "@/types/wikiResponse";
 
-const initialState = {
-  language: "en",
-  originalLanguage: null as string | null,
-  wikiData: null as API<wikiSummary>,
-  names: [] as NameTranslation[],
-};
-
 export type State = typeof initialState;
 export type Action =
   | { type: "SET_LANGUAGE"; payload: string }
-  | { type: "SET_ORIGINAL_LANGUAGE"; payload: string }
+  | { type: "SET_ORIGINAL_LANGUAGE"; payload: string | null }
   | { type: "SET_WIKI_DATA"; payload: API<wikiSummary> }
-  | { type: "SET_NAMES"; payload: NameTranslation[] };
+  | { type: "SET_NAMES"; payload: NameTranslation[] }
+  | { type: "SET_DESCRIPTION"; payload: string }
+  | { type: "SET_BIO"; payload: string };
 export type NameTranslation = {
   code: string;
   name: string;
 };
 
+const initialState = {
+  language: "en",
+  originalLanguage: null as string | null,
+  wikiData: null as API<wikiSummary>,
+  names: [] as NameTranslation[],
+  description: null as string | null,
+  bio: null as string | null,
+};
+
 export default function AddAuthor() {
   const queryParams = useSearchParams().get("author");
+  console.log("queryParams", queryParams);
 
   const [user, setUser] = useState<API<PrismaUser>>(null);
   const [translations, setTranslations] = useState<API<ManyData<PrismaLanguage>>>(null);
@@ -55,6 +60,12 @@ export default function AddAuthor() {
 
       case "SET_NAMES":
         return { ...state, names: action.payload };
+
+      case "SET_DESCRIPTION":
+        return { ...state, description: action.payload };
+
+      case "SET_BIO":
+        return { ...state, bio: action.payload };
 
       default:
         return state;
@@ -92,16 +103,26 @@ export default function AddAuthor() {
   }, [translations]);
 
   useEffect(() => {
+    function isOk(res: API<wikiSummary>) {
+      const isResDefined = !!res;
+
+      dispatch({
+        type: "SET_WIKI_DATA",
+        payload: isResDefined ? res : undefined,
+      });
+
+      //   dispatch({
+      //     type: "SET_NAMES",
+      //     payload: state.names.find((name) => name.code === "en")
+      //       ? state.names
+      //       : [...state.names, { code: res?.title ?? "", name: "" }],
+      //   });
+    }
+
     async function searchAuthor() {
       queryParams &&
         (await getWikiData(queryParams).then((res) => {
-          function isOk(response: boolean) {
-            dispatch({
-              type: "SET_WIKI_DATA",
-              payload: response ? res : undefined,
-            });
-          }
-          isOk(!!res);
+          isOk(res);
         }));
     }
 

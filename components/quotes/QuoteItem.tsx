@@ -13,6 +13,7 @@ import { QuoteItemProps } from "@/types/props";
 
 export function QuoteItem({ quote }: QuoteItemProps) {
   const creator = "My wise quotes";
+  console.log("quote: ", quote);
 
   return quote ? (
     <QuoteContainer>

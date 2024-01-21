@@ -1,3 +1,6 @@
+// Assets
+import NO_PROFILE_IMAGE from "@/app/assets/images/no-profile-image.jpg";
+
 // MAIN
 export const TITLE = "My wise quotes";
 
@@ -67,8 +70,6 @@ export const FILTERS = {
 
 // Images
 export const IMAGES = {
-  DEFAULT_PROFILE_IMAGE: "/no-profile-image.webp",
-  // NOT_FOUND_PROFILE_IMAGE: "/authorImgNotFound.jpg",
-  // PROVISOIRE
-  NOT_FOUND_PROFILE_IMAGE: "/no-profile-image.webp",
+  DEFAULT_PROFILE_IMAGE: NO_PROFILE_IMAGE,
+  NOT_FOUND_PROFILE_IMAGE: NO_PROFILE_IMAGE,
 };

@@ -7,6 +7,8 @@ import { AuthCheck } from "@/components/AuthCheck";
 import { Preview } from "./Preview";
 import { Editor } from "./Editor";
 import { SubmitBtn } from "./SubmitBtn";
+
+// Types
 import { API, ManyData, PrismaLanguage, PrismaUser } from "@/types/prisma";
 
 const initialState = {

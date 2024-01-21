@@ -12,6 +12,8 @@ export type PreviewProps = {
 };
 
 export function Preview({ content, author, username }: PreviewProps) {
+  const authorName = author && author !== "" ? author : "Unknown author";
+
   return (
     <PreviewWrapper>
       <QuoteContainer>
@@ -19,7 +21,7 @@ export function Preview({ content, author, username }: PreviewProps) {
 
         <AuthorImg author={author} image={{ width: 100 }} />
 
-        <p>- {author ?? "Unknown author"}</p>
+        <p>- {authorName}</p>
 
         <p className="text-xs italic">
           Created by <span className="font-bold">@{username}</span>

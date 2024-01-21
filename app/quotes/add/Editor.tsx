@@ -9,9 +9,8 @@ import { EditorItemWrapper } from "@/components/add/EditorItemWrapper";
 import { AddBtn } from "@/components/buttons/AddBtn";
 
 // Types
-import { Tag, TagTranslation } from "@prisma/client";
 import { Action, State } from "./page";
-import { PrismaLanguage } from "@/types/prisma";
+import { API, ManyData, PrismaAuthor, PrismaLanguage, PrismaTag } from "@/types/prisma";
 
 export type EditorProps = {
   translations: PrismaLanguage[];
@@ -24,7 +23,7 @@ export function Editor({ translations, state, dispatch }: EditorProps) {
     <EditorWrapper>
       <LanguageAndContent translations={translations} state={state} dispatch={dispatch} />
       <Author author={state.author} dispatch={dispatch} />
-      {/* <Tags translations={translations} state={state} dispatch={dispatch} /> */}
+      <Tags translations={translations} state={state} dispatch={dispatch} />
     </EditorWrapper>
   ) : null;
 }
@@ -41,7 +40,6 @@ function LanguageAndContent({ translations, state, dispatch }: LanguageAndConten
   const contentIndexFinder = translations?.findIndex(
     (translation) => translation.code === language
   );
-  console.log("contentIndexFinder", contentIndexFinder);
 
   function handleContent(e: React.ChangeEvent<HTMLTextAreaElement>) {
     if (state.contents && contentIndexFinder !== undefined && contentIndexFinder > -1) {
@@ -122,29 +120,45 @@ type AuthorProps = {
 };
 
 function Author({ author, dispatch }: AuthorProps) {
-  return (
+  const [authors, setAuthors] = useState<API<ManyData<PrismaAuthor>>>(null);
+
+  useEffect(() => {
+    async function fetchAuthors() {
+      const res = await fetch("/api/authors", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      await res.json().then((data) => setAuthors(data));
+    }
+
+    fetchAuthors();
+  }, []);
+
+  return authors ? (
     <EditorItemWrapper>
       <label htmlFor="author">Select the author</label>
 
       <select
         name="author"
         id="author"
-        defaultValue={author ?? "Unknown author"}
+        defaultValue={author ?? ""}
         className="p-2 border border-black rounded-xl"
         onChange={(e) => dispatch({ type: "SET_AUTHOR", payload: e.target.value })}
       >
-        <option value="Unknown author">Select...</option>
-        <option value="Albert Einstein">Albert Einstein</option>
-        <option value="Isaac Newton">Isaac Newton</option>
-        <option value="Galileo Galilei">Galileo Galilei</option>
-        <option value="Marie Curie">Marie Curie</option>
-        <option value="Stephen Hawking">Stephen Hawking</option>
-        <option value="Error on purpose">Error on purpose</option>
+        <option value="">Unknown author</option>
+        {authors.data.map((author) => (
+          <option key={author.id} value={author.englishName}>
+            {author.translations[0].name}
+          </option>
+        ))}
       </select>
 
       <AddBtn text="Add author" addFunction={() => console.log("Add author")} />
     </EditorItemWrapper>
-  );
+  ) : null;
 }
 
 export type TagsProps = {
@@ -154,41 +168,27 @@ export type TagsProps = {
 };
 
 function Tags({ translations, state, dispatch }: TagsProps) {
-  const [tagList, setTagList] = useState<TagTranslation[]>([]);
+  const [tags, setTags] = useState<API<ManyData<PrismaTag>>>(null);
+  console.log("tags editor", tags);
+  console.log("first");
 
   useEffect(() => {
     async function getTags() {
       const res = await fetch("/api/tags", {
         method: "GET",
       });
-      const resTranslations = await fetch("/api/tags/translations", {
-        method: "GET",
-      });
 
-      const tags: Tag[] = await res.json();
-      const tagsTranslations: TagTranslation[] = await resTranslations.json();
-
-      const tagsWithTranslations = tagsTranslations.filter((tagTranslation) => {
-        const filterLanguages = translations?.filter(
-          (translation) => translation.code === state.language
-        );
-
-        return filterLanguages?.some(
-          (filterLanguage) => filterLanguage.id === tagTranslation.languageId
-        );
-      });
-
-      setTagList(tagsWithTranslations);
+      await res.json().then((res) => setTags(res));
     }
 
     getTags();
   }, [dispatch, state.language, translations]);
 
-  return (
+  return tags ? (
     <EditorItemWrapper>
       <p>Select the tags</p>
 
-      <AvailableTags tagList={tagList} state={state} dispatch={dispatch} />
+      <AvailableTags tags={tags} state={state} dispatch={dispatch} />
 
       <SelectedTags state={state} dispatch={dispatch} />
 
@@ -201,31 +201,36 @@ function Tags({ translations, state, dispatch }: TagsProps) {
         <option value="money">Money</option> */}
 
       <p>{`You don't find the right one?`}</p>
+
       <AddBtn text="Suggest a tag" addFunction={() => console.log("Add tag")} />
     </EditorItemWrapper>
-  );
+  ) : null;
 }
 
 type AvailableTagsProps = {
-  tagList: TagTranslation[];
+  tags: ManyData<PrismaTag>;
   state: State;
   dispatch: Dispatch<Action>;
 };
 
-function AvailableTags({ tagList, state, dispatch }: AvailableTagsProps) {
+function AvailableTags({ tags, state, dispatch }: AvailableTagsProps) {
+  console.log("tags AvailableTags", tags);
   return (
     <div className="flex flex-wrap gap-2">
-      {tagList?.map((tag, index) => {
-        const tagAlreadySelected = state.tags.some((selectedTag) => selectedTag === tag.name);
+      {tags.data.map((tag, index) => {
+        const tagAlreadySelected = state.tags.some(
+          (selectedTag) => selectedTag === tag.translations[0].name
+        );
+        console.log("tagAlreadySelected", tagAlreadySelected);
 
         return (
           !tagAlreadySelected && (
             <button
               key={index}
               className="flex flex-wrap items-center justify-center gap-2 py-1 px-2 border rounded-md duration-150 hover:scale-110 hover:bg-blue-100"
-              onClick={() => dispatch({ type: "SET_TAGS", payload: tag.name })}
+              onClick={() => dispatch({ type: "SET_TAGS", payload: tag.translations[0].name })}
             >
-              {tag.name}
+              {tag?.translations?.[0]?.name ?? "No name"}
             </button>
           )
         );

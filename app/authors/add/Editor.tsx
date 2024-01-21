@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Dispatch, useState } from "react";
+import { Dispatch, useEffect, useState } from "react";
 
 // Components
 import { EditorWrapper } from "@/components/add/EditorWrapper";
@@ -22,10 +22,61 @@ type EditorProps = {
 
 export function Editor({ translations, state, dispatch }: EditorProps) {
   return (
-    <EditorWrapper>
+    <EditorWrapper
+      LanguageComponent={<Language translations={translations} state={state} dispatch={dispatch} />}
+    >
       <FindAuthorOnWikipedia wikiData={state.wikiData} dispatch={dispatch} />
-      <LanguageAndName translations={translations} state={state} dispatch={dispatch} />
+      <Name translations={translations} state={state} dispatch={dispatch} />
+      <Description translations={translations} state={state} dispatch={dispatch} />
+      <Bio translations={translations} state={state} dispatch={dispatch} />
     </EditorWrapper>
+  );
+}
+
+function Language({ translations, state, dispatch }: EditorProps) {
+  const { language, originalLanguage } = state;
+
+  return (
+    <div className="flex flex-col items-center h-full gap-2 shadow-md">
+      <p>Select the language</p>
+
+      <ul className="flex flex-wrap items-start justify-center gap-2">
+        {translations.map((translation, index) => {
+          return (
+            <li key={index} className="flex flex-col items-center gap-1">
+              <button
+                type="button"
+                className={`${
+                  language === translation.code ? "bg-green-300" : ""
+                } p-2 border border-black rounded-xl`}
+                onClick={() => dispatch({ type: "SET_LANGUAGE", payload: translation.code })}
+              >
+                {translation.englishName}
+              </button>
+
+              <button
+                className={`${
+                  originalLanguage === translation.code ? "bg-yellow-300" : ""
+                } text-xs italic py-1 px-2 rounded-md`}
+                onClick={() =>
+                  dispatch({
+                    type: "SET_ORIGINAL_LANGUAGE",
+                    payload: originalLanguage === translation.code ? null : translation.code,
+                  })
+                }
+              >
+                Original
+              </button>
+            </li>
+          );
+        })}
+
+        <AddBtn
+          text="Suggest a language"
+          addFunction={() => console.log("Suggest a new language")}
+        />
+      </ul>
+    </div>
   );
 }
 
@@ -39,20 +90,39 @@ function FindAuthorOnWikipedia({ wikiData, dispatch }: FindAuthorOnWikipediaProp
   const queryParams = useSearchParams().get("author");
   const router = useRouter();
   const [authorNameValue, setAuthorNameValue] = useState(queryParams ?? "");
+  const [test, setTest] = useState<any>(null);
+  console.log("test OHHH", test);
 
   async function searchAuthor() {
-    router.push(`${pathname}?author=${authorNameValue}`);
+    authorNameValue && router.push(`${pathname}?author=${authorNameValue}`);
 
-    await getWikiData(authorNameValue).then((res) => {
-      function isOk(response: boolean) {
-        dispatch({
-          type: "SET_WIKI_DATA",
-          payload: response ? res : undefined,
-        });
-      }
-      isOk(!!res);
-    });
+    authorNameValue &&
+      (await getWikiData(authorNameValue).then((res) => {
+        function isOk(response: boolean) {
+          dispatch({
+            type: "SET_WIKI_DATA",
+            payload: response ? res : undefined,
+          });
+        }
+        isOk(!!res);
+      }));
   }
+
+  useEffect(() => {
+    async function getTest() {
+      const res = await fetch("api/test", {
+        method: "GET",
+      });
+      console.log("res", res);
+
+      const user = await res.json();
+      console.log("user", user);
+
+      setTest(user);
+    }
+
+    getTest();
+  }, []);
 
   return (
     <div className="flex flex-col items-center gap-4 p-2 border-2 rounded-lg">
@@ -64,11 +134,10 @@ function FindAuthorOnWikipedia({ wikiData, dispatch }: FindAuthorOnWikipediaProp
           className="p-2 border border-black rounded-xl"
           placeholder="Search for the author on Wikipedia"
           value={authorNameValue}
+          maxLength={200}
           onChange={(e) => setAuthorNameValue(e.target.value)}
         />
       </div>
-
-      {wikiData === undefined && <AuthorNotFound authorNameValue={authorNameValue} />}
 
       <button
         type="button"
@@ -77,20 +146,33 @@ function FindAuthorOnWikipedia({ wikiData, dispatch }: FindAuthorOnWikipediaProp
       >
         Find the author
       </button>
+
+      {wikiData ? <AuthorFound /> : <AuthorNotFound />}
     </div>
   );
 }
 
-function AuthorNotFound({ authorNameValue }: { authorNameValue: string }) {
+function AuthorFound() {
   return (
-    <p className="bg-red-500 text-white text-center font-semibold p-2 rounded-lg">
-      No author found with the name of {`"${authorNameValue}"`}
+    <p className="bg-green-500 text-white text-center font-semibold p-2 rounded-lg">
+      Author found!
     </p>
   );
 }
 
-function LanguageAndName({ translations, state, dispatch }: EditorProps) {
-  const { language, originalLanguage, names } = state;
+function AuthorNotFound() {
+  const queryParams = useSearchParams().get("author");
+  console.log("queryParams AuthorNotFound", queryParams);
+
+  return queryParams !== null && queryParams !== "" ? (
+    <p className="bg-red-500 text-white text-center font-semibold p-2 rounded-lg">
+      No author found with the name of {`"${queryParams}"`}
+    </p>
+  ) : null;
+}
+
+function Name({ translations, state, dispatch }: EditorProps) {
+  const { language, names } = state;
 
   const nameIndexFinder = translations?.findIndex((translation) => translation.code === language);
 
@@ -109,48 +191,15 @@ function LanguageAndName({ translations, state, dispatch }: EditorProps) {
     }
   }
 
-  return nameIndexFinder || nameIndexFinder === 0 ? (
+  return state.language !== "en" && (nameIndexFinder || nameIndexFinder === 0) ? (
     <div className="flex flex-wrap items-center justify-center gap-4 p-2 border-2 rounded-lg">
-      <div className="flex flex-col items-center h-full gap-2">
-        <p>Select the language</p>
-
-        <ul className="flex flex-wrap justify-center gap-2 max-w-[300px]">
-          {translations.map((translation, index) => (
-            <li key={index} className="flex flex-col items-center gap-1">
-              <button
-                type="button"
-                className={`${
-                  language === translation.code ? "bg-green-300" : ""
-                } p-2 border border-black rounded-xl`}
-                onClick={() => dispatch({ type: "SET_LANGUAGE", payload: translation.code })}
-              >
-                {translation.englishName}
-              </button>
-
-              <button
-                className={`${
-                  originalLanguage === translation.code ? "bg-yellow-300" : ""
-                } text-xs italic py-1 px-2 rounded-md`}
-                onClick={() =>
-                  dispatch({ type: "SET_ORIGINAL_LANGUAGE", payload: translation.code })
-                }
-              >
-                Original
-              </button>
-            </li>
-          ))}
-        </ul>
-
-        <AddBtn
-          text="Suggest a language"
-          addFunction={() => console.log("Suggest a new language")}
-        />
-      </div>
-
       <div className="flex flex-col items-center h-full gap-2">
         <label htmlFor="content">
           Write the author{"'"}s name in{" "}
-          <span className="font-semibold">{translations[0].englishName.toLowerCase()}</span> here
+          <span className="font-semibold">
+            {translations[nameIndexFinder].englishName.toLowerCase()}
+          </span>{" "}
+          here
           <br />
           (if different from english):
         </label>
@@ -161,10 +210,85 @@ function LanguageAndName({ translations, state, dispatch }: EditorProps) {
           rows={1}
           placeholder="Albert Einstein"
           value={names?.[nameIndexFinder].name}
+          maxLength={200}
           className="p-2 border border-black rounded-xl"
           onChange={(e) => handleName(e)}
         ></textarea>
       </div>
     </div>
   ) : null;
+}
+
+function Description({ translations, state, dispatch }: EditorProps) {
+  const nameIndexFinder = translations?.findIndex(
+    (translation) => translation.code === state.language
+  );
+
+  return (
+    <div className="flex flex-col items-center gap-4 p-2 border-2 rounded-lg">
+      <div className="flex flex-col items-center h-full gap-2">
+        <label htmlFor="content">
+          Write the author{"'"}s description in{" "}
+          <span className="font-semibold">
+            {translations[nameIndexFinder].englishName.toLowerCase()}
+          </span>{" "}
+          here:
+        </label>
+
+        <textarea
+          name="content"
+          cols={30}
+          rows={2}
+          placeholder="Ancient Greek philosopher"
+          value={state.description ?? ""}
+          maxLength={100}
+          className="p-2 border border-black rounded-xl"
+          onChange={(e) =>
+            dispatch({
+              type: "SET_DESCRIPTION",
+              payload: e.target.value,
+            })
+          }
+        ></textarea>
+      </div>
+    </div>
+  );
+}
+
+function Bio({ translations, state, dispatch }: EditorProps) {
+  const nameIndexFinder = translations?.findIndex(
+    (translation) => translation.code === state.language
+  );
+
+  return (
+    <div className="flex flex-col items-center gap-4 p-2 border-2 rounded-lg">
+      <div className="flex flex-col items-center h-full gap-2">
+        <label htmlFor="content">
+          Write the author{"'"}s bio in{" "}
+          <span className="font-semibold">
+            {translations[nameIndexFinder].englishName.toLowerCase()}
+          </span>{" "}
+          here:
+        </label>
+
+        <textarea
+          name="content"
+          rows={10}
+          placeholder="Albert Einstein was a German-born theoretical physicist who developed the theory of relativity,
+          one of the two pillars of modern physics. His work is also known for its influence on the philosophy of science.
+          He is best known to the general public for his mass–energy equivalence formula E = mc2, which has been dubbed the
+          world's most famous equation....."
+          value={state.bio ?? ""}
+          maxLength={5000}
+          className="p-2 min-w-[50vw] max-w-full border border-black rounded-xl"
+          onChange={(e) =>
+            dispatch({
+              type: "SET_BIO",
+              payload: e.target.value,
+            })
+          }
+        ></textarea>
+      </div>
+    </div>
+  );
 }

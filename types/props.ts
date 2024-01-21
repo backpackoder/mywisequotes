@@ -68,7 +68,7 @@ export type InputAuthorProps = {
 };
 
 export type AuthorImgProps = {
-  author?: string;
+  author: string | undefined;
   image?: {
     width?: number;
     height?: number;

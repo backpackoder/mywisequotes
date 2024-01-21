@@ -122,18 +122,3 @@ export function SignInButton({
 export function SignOutButton() {
   return <button onClick={() => signOut()}>Sign out</button>;
 }
-
-// <div
-//   ref={menuRef}
-//   className="absolute -bottom-2 left-1/2 -translate-x-1/2 translate-y-full min-w-max bg-transparent"
-// >
-//   <ul className="flex flex-col gap-y-2 bg-white p-2 border-2 rounded-md shadow-md">
-//     {list.map((item, index) => (
-//       <li key={index} className="py-1 px-3 rounded-lg duration-300 hover:bg-blue-300">
-//         <Link href={item.path} className="flex items-center gap-2">
-//           {item.icon} {item.label}
-//         </Link>
-//       </li>
-//     ))}
-//   </ul>
-// </div>;

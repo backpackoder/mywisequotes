@@ -18,13 +18,19 @@ export function AuthorImg({ author, image }: AuthorImgProps) {
   const [wikipedia, setWikipedia] = useState<API<wikiSummary>>(null);
 
   useEffect(() => {
-    author && getWikiData(author).then((data) => setWikipedia(data));
+    if (!author || author === "") {
+      setWikipedia(null);
+    }
+
+    if (author && author !== "") {
+      getWikiData(author).then((data) => setWikipedia(data));
+    }
   }, [author]);
 
   return (
     <Image
-      src={wikipedia?.originalimage?.source ?? IMAGES.NOT_FOUND_PROFILE_IMAGE}
-      alt={author ? `${author}'s profile image` : "Default profile image"}
+      src={wikipedia?.originalimage?.source ?? IMAGES.DEFAULT_PROFILE_IMAGE}
+      alt={`${author}'s profile image`}
       width={image?.width ?? 100}
       height={image?.height ?? 0}
       priority

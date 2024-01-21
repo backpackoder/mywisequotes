@@ -51,7 +51,7 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  email         String?   @unique
+  email         String   @unique
   emailVerified DateTime?
   username      String    @unique @default(cuid())
   name          String?
@@ -66,19 +66,26 @@ model User {
   followedBy    Follows[] @relation("following")
   following     Follows[] @relation("follower")
 
-  favoriteQuotes   Quote[]
-  favorites        Favorite[]
-  comments         Comment[]
-  commentLikes     CommentLike[]
-  commentReplies   commentReply[]
+  quotes   Quote[]
   createdQuotes    Quote[]  @relation("createdQuotes")
   updatedQuotes    Quote[]  @relation("updatedQuotes")
+  favoriteQuotes  FavoriteQuote[]
+
+  authors  Author[]
+  createdAuthors   Author[] @relation("createdAuthors")
+  updatedAuthors   Author[] @relation("updatedAuthors")
+  favoriteAuthors  FavoriteAuthor[]
+
+  comments         Comment[]
+  commentLikes     CommentLike[]
+  commentReplies   CommentReply[]
 }
 
 model UserSettings {
   id            String   @id @default(cuid())
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+
   user          User     @relation(fields: [userId], references: [id])
   userId        String   @unique
 
@@ -95,6 +102,32 @@ model Follows {
   @@id([followerId, followingId])
 }
 
+model FavoriteQuote {
+  id              String   @id @default(cuid())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId          String
+  quote           Quote    @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+  quoteId         String
+
+  @@unique([userId, quoteId])
+}
+
+model FavoriteAuthor {
+  id              String   @id @default(cuid())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId          String
+  author          Author   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId        String
+
+  @@unique([userId, authorId])
+}
+
 model Quote {
   id              String            @id @default(cuid())
   createdAt       DateTime          @default(now())
@@ -104,7 +137,7 @@ model Quote {
   updatedBy       User[]             @relation("updatedQuotes")
 
   translations    QuoteTranslation[]
-  date            DateTime?
+  date            String?
   author          Author            @relation(fields: [authorId], references: [id])
   authorId        String
   tags            Tag[]
@@ -112,7 +145,7 @@ model Quote {
   
   favoritedBy     User[]
   favoritedById   String[]
-  favorites       Favorite[]
+  favorites       FavoriteQuote[]
   comments        Comment[]
 }
 
@@ -136,7 +169,9 @@ model Tag {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   
+  englishName     String   @unique
   translations    TagTranslation[]
+
   quotes          Quote[]
 }
 
@@ -153,19 +188,6 @@ model TagTranslation {
   @@unique([name, languageId])
 }
 
-model Favorite {
-  id              String   @id @default(cuid())
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId          String
-  quote           Quote    @relation(fields: [quoteId], references: [id], onDelete: Cascade)
-  quoteId         String
-
-  @@unique([userId, quoteId])
-}
-
 model Comment {
   id              String   @id @default(cuid())
   createdAt       DateTime @default(now())
@@ -173,14 +195,12 @@ model Comment {
   
   content         String
   likes           CommentLike[]
-  replies         commentReply[]
+  replies         CommentReply[]
 
   user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId          String
   quote           Quote    @relation(fields: [quoteId], references: [id], onDelete: Cascade)
   quoteId         String
-
-  @@unique([userId, quoteId])
 }
 
 model CommentLike {
@@ -188,17 +208,16 @@ model CommentLike {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
-  replies         commentReply[]
-
   user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId          String
   comment         Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
   commentId       String
+  replies         CommentReply[]
 
   @@unique([userId, commentId])
 }
 
-model commentReply {
+model CommentReply {
   id              String   @id @default(cuid())
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
@@ -210,20 +229,24 @@ model commentReply {
   userId          String
   comment         Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
   commentId       String
-
-  @@unique([userId, commentId])
 }
 
 model Author {
   id              String              @id @default(cuid())
   createdAt       DateTime            @default(now())
+  createdBy       User                @relation("createdAuthors", fields: [createdById], references: [id], onDelete: Cascade)
+  createdById     String
   updatedAt       DateTime            @updatedAt
+  updatedBy       User[]              @relation("updatedAuthors")
 
-  englishName     String            @unique
+  englishName     String              @unique
   translations    AuthorTranslation[]
   wikipediaLink   String?
 
   quotes          Quote[]
+  favoriteAuthors FavoriteAuthor[]
+  favoritedBy     User[]
+  favoritedById   String[]
 }
 
 model AuthorTranslation {
@@ -249,8 +272,8 @@ model Language {
   updatedAt       DateTime @updatedAt
 
   code            String   @unique
-  nativeName      String   @unique
   englishName     String   @unique
+  nativeName      String
 
   quotes          QuoteTranslation[]
   tags            TagTranslation[]

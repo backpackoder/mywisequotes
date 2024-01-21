@@ -15,9 +15,9 @@ export function Preview({ state }: PreviewProps) {
   const { wikiData } = state;
 
   const datas: WikiAuthorDatas = {
-    name: wikiData?.title ?? "???",
-    description: wikiData?.description ?? "No description",
-    bio: wikiData?.extract ?? "No bio",
+    name: wikiData?.title ?? "",
+    description: wikiData?.description ?? "",
+    bio: wikiData?.extract ?? "",
     wikipediaLink: {
       desktop: wikiData?.content_urls?.desktop.page,
       mobile: wikiData?.content_urls?.mobile.page,

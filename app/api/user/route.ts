@@ -13,16 +13,20 @@ export async function GET(req: Request) {
     ? await prisma.user.findUnique({
         where: { email: currentUserEmail },
         include: {
-          favorites: true,
+          settings: true,
+          followedBy: true,
+          following: true,
+          quotes: true,
+          createdQuotes: true,
+          updatedQuotes: true,
           favoriteQuotes: true,
+          authors: true,
+          createdAuthors: true,
+          updatedAuthors: true,
+          favoriteAuthors: true,
           comments: true,
           commentLikes: true,
           commentReplies: true,
-          createdQuotes: true,
-          updatedQuotes: true,
-          followedBy: true,
-          following: true,
-          settings: true,
         },
       })
     : null;
