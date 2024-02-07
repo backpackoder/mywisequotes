@@ -5,7 +5,7 @@ import { API, PrismaLanguage } from "@/types/prisma";
 import { wikiSummary } from "@/types/wikiResponse";
 
 // Utils
-import { initialState } from "../page";
+import { initialState } from "../utils/initialState";
 
 export type EditorProps = {
   translations: PrismaLanguage[];
