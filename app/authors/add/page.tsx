@@ -9,29 +9,12 @@ import { Editor } from "./editor";
 
 // Utils
 import { getWikiData } from "@/utils/getWikiData";
+import { initialState } from "./utils/initialState";
 
 // Types
 import { API, ManyData, PrismaLanguage, PrismaUser } from "@/types/prisma";
 import { wikiSummary } from "@/types/wikiResponse";
-import {
-  Action,
-  BioTranslation,
-  CreateAuthorClientSide,
-  DescriptionTranslation,
-  NameTranslation,
-  State,
-  Status,
-} from "./types";
-
-export const initialState = {
-  language: "en",
-  status: null as Status,
-  originalLanguage: null as string | null,
-  wikiData: null as API<wikiSummary>,
-  names: [] as NameTranslation[],
-  descriptions: [] as DescriptionTranslation[],
-  bio: [] as BioTranslation[],
-};
+import { Action, CreateAuthorClientSide, State } from "./types";
 
 export default function AddAuthor() {
   const queryParams = useSearchParams().get("author");
