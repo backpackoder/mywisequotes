@@ -1,7 +1,7 @@
 // Types
 import { Items } from "./navbar";
 import { DispatchQuotesAndAuthors } from "./authors";
-import { User, UserSettings } from "@prisma/client";
+import { User } from "@prisma/client";
 import { PrismaAuthor, PrismaQuote } from "./prisma";
 
 // LAYOUT
@@ -102,8 +102,8 @@ export type UserItemProps = {
 };
 
 export type UserSettingsItemProps = {
-  typeSettings: keyof UserSettings;
-  userSettings: UserSettings;
+  typeSettings: keyof User;
+  user: User;
   handleModifiedData: () => void;
   Component: JSX.Element;
 };

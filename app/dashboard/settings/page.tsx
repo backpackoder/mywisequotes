@@ -14,11 +14,10 @@ import { styles } from "@/app/assets/styles/styles";
 import { IMAGES } from "@/commons/commons";
 
 // Types
-import { User, UserSettings } from "@prisma/client";
+import { User } from "@prisma/client";
 
 export default function Settings() {
   const [user, setUser] = useState<User | null | undefined>(null);
-  const [userSettings, setUserSettings] = useState<UserSettings | null | undefined>(null);
   const [isRefresh, setIsRefresh] = useState(false);
 
   const data = {
@@ -30,8 +29,8 @@ export default function Settings() {
       nationality: user?.nationality ?? "Unknown",
     },
     settings: {
-      emailUpdates: userSettings?.emailUpdates ?? false,
-      language: userSettings?.language ?? "en",
+      emailUpdates: user?.emailUpdates ?? false,
+      language: user?.language ?? "en",
     },
   };
 
@@ -45,15 +44,9 @@ export default function Settings() {
         method: "GET",
       });
 
-      const resSettings = await fetch("/api/user/settings", {
-        method: "GET",
-      });
-
       const user: User | null | undefined = await res.json();
-      const userSettings: UserSettings | null | undefined = await resSettings.json();
 
       setUser(user);
-      setUserSettings(userSettings);
     }
 
     getSettings();
@@ -61,7 +54,7 @@ export default function Settings() {
 
   return (
     <AuthCheck>
-      {user && userSettings && (
+      {user && (
         <section className="flex flex-col items-center justify-center gap-8">
           <h2 className="font-semibold text-4xl">⚙️ Settings</h2>
 
@@ -116,13 +109,13 @@ export default function Settings() {
 
               <LanguageItem
                 typeSettings="language"
-                userSettings={userSettings}
+                user={user}
                 handleModifiedData={handleModifiedData}
               />
 
               <EmailUpdatesItem
                 typeSettings="emailUpdates"
-                userSettings={userSettings}
+                user={user}
                 handleModifiedData={handleModifiedData}
               />
             </div>

@@ -15,13 +15,15 @@ export async function getPrismaCalls() {
 }
 
 export async function RandomQuote() {
-  const quote = await prisma.quote.findMany({
+  const quotes = await prisma.quote.findMany({
     include: PRISMA_CALLS.quotes.include,
   });
 
-  return quote ? (
+  const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+
+  return randomQuote ? (
     <article className="flex items-center justify-center w-full p-4">
-      <QuoteItem quote={quote[0]} />
+      <QuoteItem quote={randomQuote} />
     </article>
   ) : null;
 }

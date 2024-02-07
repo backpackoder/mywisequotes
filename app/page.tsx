@@ -3,9 +3,10 @@ import { RandomQuote } from "@/components/quotes/RandomQuote";
 import { DiscoverQuotesAndAuthors } from "@/components/DiscoverQuotesAndAuthors";
 
 export default async function Home() {
-  const test = await fetch("https://fr.wikipedia.org/api/rest_v1/page/summary/Napoleon").then(
-    (res) => res.json()
-  );
+  // const test = await fetch("https://fr.wikipedia.org/api/rest_v1/page/summary/Napoleon").then(
+  //   (res) => res.json()
+  // );
+
   // console.log("test", test);
 
   return (

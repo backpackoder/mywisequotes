@@ -4,14 +4,12 @@ import {
   AuthorTranslation,
   Comment,
   CommentLike,
-  Favorite,
   Language,
   Quote,
   QuoteTranslation,
   Tag,
   TagTranslation,
   User,
-  commentReply,
 } from "@prisma/client";
 
 export type API<T> = T | null | undefined;
@@ -23,10 +21,10 @@ export type ManyData<T> = {
 
 export interface PrismaUser extends User {
   quotes: Quote[];
-  favorites: Favorite[];
+  // favorites: Favorite[];
   comments: Comment[];
   commentLikes: CommentLike[];
-  commentReplies: commentReply[];
+  // commentReplies: commentReply[];
 }
 
 export interface PrismaQuote extends Quote {
@@ -35,12 +33,12 @@ export interface PrismaQuote extends Quote {
   translations: PrismaQuoteTranslation[];
   author: Author & { translations: AuthorTranslation[] & { language: Language } };
   tags: Tag[] & { translations: TagTranslation[] & { language: Language } };
-  favorites: Favorite[];
+  // favorites: Favorite[];
   favoritedBy: User[];
   comments: Comment[] & {
     user: User;
     likes: CommentLike[] & { user: User };
-    replies: commentReply[] & { user: User; likes: CommentLike[] }[];
+    // replies: commentReply[] & { user: User; likes: CommentLike[] }[];
   };
 }
 

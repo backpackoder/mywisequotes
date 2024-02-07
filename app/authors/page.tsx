@@ -62,23 +62,16 @@ export default function Authors() {
 
         <article className="flex flex-wrap justify-center gap-8">
           {authors.data.map((author, index) => {
-            const findIndexEnglish = author.translations.findIndex(
-              (translation) => translation.language.code === "en"
+            const findIndexLanguage = author.translations.findIndex(
+              (translation) => translation.language.code === state.language ?? "en"
             );
-            const findIndexLanguage =
-              author.translations.findIndex(
-                (translation) => translation.language.code === state.language ?? "en"
-              ) ?? 0;
 
             return (
               <div
                 key={index}
                 className="group flex flex-col items-center bg-blue-200 p-4  rounded-lg duration-300 hover:bg-blue-300"
               >
-                <Link
-                  href={`/authors/${author.translations[findIndexEnglish].name}`}
-                  className="text-2xl"
-                >
+                <Link href={`/authors/${author.englishName}`} className="text-2xl">
                   {author.translations[findIndexLanguage].name}
                 </Link>
 
@@ -91,7 +84,7 @@ export default function Authors() {
                 </div>
 
                 <Link
-                  href={`/authors/${author.translations[findIndexEnglish].name}`}
+                  href={`/authors/${author.englishName}`}
                   className="bg-[#5bff76] text-sm font-medium p-2 rounded duration-300 mt-2 group-hover:bg-[#21cf3e]"
                 >
                   VIEW INFOS

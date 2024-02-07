@@ -1,13 +1,12 @@
 export type wikiSummary = {
   type: string;
-  title: string; // title of the page
-  displaytitle: string; // title of the page
+  title: string;
+  displaytitle: string;
   namespace: { id: number; text: string };
   wikibase_item: string;
   titles: { canonical: string; normalized: string; display: string };
-  pageid: number; // page Id
+  pageid: number;
   thumbnail: {
-    // Thumbnail for the page
     source: string;
     width: number;
     height: number;
@@ -25,7 +24,6 @@ export type wikiSummary = {
   description: string;
   description_source: string;
   content_urls: {
-    // The urls will be here
     desktop: {
       page: string;
       revisions: string;

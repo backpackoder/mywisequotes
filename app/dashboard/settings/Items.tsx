@@ -76,10 +76,7 @@ export function UserItem({ type, user, Component, handleModifiedData }: UserItem
   );
 }
 
-export function LanguageItem({
-  typeSettings,
-  userSettings,
-}: Omit<UserSettingsItemProps, "Component">) {
+export function LanguageItem({ typeSettings, user }: Omit<UserSettingsItemProps, "Component">) {
   async function updateUserSettings(e: React.ChangeEvent<HTMLSelectElement>) {
     const value = e.target.value;
 
@@ -95,7 +92,7 @@ export function LanguageItem({
       },
     });
 
-    value !== userSettings[typeSettings] && res.json();
+    value !== user[typeSettings] && res.json();
   }
 
   return (
@@ -104,7 +101,7 @@ export function LanguageItem({
 
       <select
         name={typeSettings}
-        defaultValue={userSettings.language.toLocaleString() ?? ""}
+        defaultValue={user.language.toLocaleString() ?? ""}
         // value={userSettings.language.toLocaleString() ?? ""}
         className="p-2 border-2 rounded-lg"
         onChange={(e) => updateUserSettings(e)}
@@ -117,10 +114,7 @@ export function LanguageItem({
   );
 }
 
-export function EmailUpdatesItem({
-  typeSettings,
-  userSettings,
-}: Omit<UserSettingsItemProps, "Component">) {
+export function EmailUpdatesItem({ typeSettings, user }: Omit<UserSettingsItemProps, "Component">) {
   async function updateUserSettings(e: React.ChangeEvent<HTMLInputElement>) {
     const value = e.target.checked;
 
@@ -136,17 +130,17 @@ export function EmailUpdatesItem({
       },
     });
 
-    value !== userSettings[typeSettings] && res.json();
+    value !== user[typeSettings] && res.json();
   }
 
-  return userSettings ? (
+  return user ? (
     <div className="flex items-center justify-center gap-2">
       <p>Email updates</p>
 
       <input
         type="checkbox"
         name={typeSettings}
-        defaultChecked={userSettings.emailUpdates}
+        defaultChecked={user.emailUpdates}
         className="p-2 border-2 rounded-lg"
         onChange={(e) => updateUserSettings(e)}
       />

@@ -20,8 +20,11 @@ export type EditorProps = {
 
 export function Editor({ translations, state, dispatch }: EditorProps) {
   return translations ? (
-    <EditorWrapper>
-      <LanguageAndContent translations={translations} state={state} dispatch={dispatch} />
+    <EditorWrapper
+      LanguageComponent={
+        <LanguageAndContent translations={translations} state={state} dispatch={dispatch} />
+      }
+    >
       <Author author={state.author} dispatch={dispatch} />
       <Tags translations={translations} state={state} dispatch={dispatch} />
     </EditorWrapper>
@@ -71,7 +74,7 @@ function LanguageAndContent({ translations, state, dispatch }: LanguageAndConten
                 } p-2 border border-black rounded-xl`}
                 onClick={() => dispatch({ type: "SET_LANGUAGE", payload: translation.code })}
               >
-                {translation.englishName}
+                {translation.name}
               </button>
 
               <button
@@ -97,7 +100,7 @@ function LanguageAndContent({ translations, state, dispatch }: LanguageAndConten
       <div className="flex flex-col items-center h-full gap-2">
         <label htmlFor="content">
           Write your quote in{" "}
-          <span className="font-semibold">{translations[0].englishName.toLowerCase()}</span> here:
+          <span className="font-semibold">{translations[0].name.toLowerCase()}</span> here:
         </label>
 
         <textarea
@@ -150,7 +153,7 @@ function Author({ author, dispatch }: AuthorProps) {
       >
         <option value="">Unknown author</option>
         {authors.data.map((author) => (
-          <option key={author.id} value={author.englishName}>
+          <option key={author.id} value={author.translations[0].name}>
             {author.translations[0].name}
           </option>
         ))}

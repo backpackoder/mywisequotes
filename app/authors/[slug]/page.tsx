@@ -5,8 +5,10 @@ import { AuthorWrapper } from "@/components/authors/AuthorWrapper";
 import { AuthorTemplate } from "@/components/authors/AuthorTemplate";
 import { AuthorNotFound } from "@/components/authors/AuthorNotFound";
 
+// Utils
+import { slugWithSpacesHandle } from "@/utils/slugWithSpacesHandle";
+
 // Types
-import { PRISMA_CALLS } from "@/utils/prismaCalls";
 import { getWikiData } from "@/utils/getWikiData";
 
 export type WikiAuthorDatas =
@@ -25,24 +27,22 @@ export type WikiAuthorDatas =
 
 export default async function Author({ params }: { params: { slug: string } }) {
   const { slug } = params;
-  const slugWithSpaces = slug.replace("%20", " ");
+  const slugWithSpaces = slugWithSpacesHandle(slug);
 
   const author = await prisma.author.findFirst({
     where: {
-      translations: {
-        some: {
-          name: slugWithSpaces,
-        },
-      },
+      englishName: slugWithSpaces,
     },
-
-    include: PRISMA_CALLS.authors.include,
+    include: {
+      translations: true,
+      quotes: true,
+    },
   });
 
-  const wikiData = author && (await getWikiData(author.translations[0].name));
+  const wikiData = author && (await getWikiData(author.englishName));
 
   const datas: WikiAuthorDatas = wikiData && {
-    name: author.translations[0].name,
+    name: wikiData.title,
     description: wikiData.description,
     bio: wikiData.extract,
     wikipediaLink: {
@@ -55,7 +55,10 @@ export default async function Author({ params }: { params: { slug: string } }) {
   return (
     <AuthorWrapper>
       {author ? (
-        <AuthorTemplate author={author} wikiData={datas} />
+        <>
+          {/* @ts-expect-error Async Server Component */}
+          <AuthorTemplate slugWithSpaces={slugWithSpaces} wikiData={datas} />
+        </>
       ) : (
         <AuthorNotFound authorName={slugWithSpaces} />
       )}

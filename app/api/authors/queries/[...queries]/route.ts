@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 
 // Commons
 import { FILTERS } from "@/commons/commons";
+
+// Utils
 import { PRISMA_CALLS } from "@/utils/prismaCalls";
 
 export async function GET(req: Request, { params }: { params: { queries: string[] } }) {
