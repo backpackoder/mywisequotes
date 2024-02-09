@@ -1,5 +1,5 @@
 export type Params = {
-  language?: string;
+  language: string;
   maxLength?: number;
   minLength?: number;
   tag?: string;

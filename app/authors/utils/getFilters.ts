@@ -1,5 +1,6 @@
 // Types
 import { AuthorKeyOf, Filter } from "@/types/getFilters";
+import { LANGUAGES, Language } from "@/types/languages";
 
 export function getFilters() {
   const limit: Filter<number> = {
@@ -31,7 +32,7 @@ export function getFilters() {
     },
   };
 
-  const order = {
+  const order: Filter<"asc" | "desc"> = {
     title: "order",
     label: "Order by",
     values: {
@@ -43,7 +44,20 @@ export function getFilters() {
     },
   };
 
-  const FILTERS = [limit, sortBy, order];
+  const language: Filter<Language["code"]> = {
+    title: "language",
+    label: "Language",
+    values: {
+      default: { value: "en", label: "English" },
+      others: [
+        ...LANGUAGES.map((language) => {
+          return { value: language.code, label: language.nativeName };
+        }),
+      ],
+    },
+  };
+
+  const FILTERS = [limit, sortBy, order, language];
 
   return FILTERS;
 }

@@ -1,15 +1,14 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useReducer, useState } from "react";
 
 // Components
+import { AuthorCard } from "./components/AuthorCard";
 import { Navbar } from "@/components/navbars/Navbar";
 import { Pagination } from "@/components/Pagination";
-import { AuthorImg } from "@/components/quotes/AuthorImg";
 
 // Commons
-import { FILTERS, ROUTES } from "@/commons/commons";
+import { FILTERS } from "@/commons/commons";
 
 // Types
 import { Params } from "@/types/params";
@@ -28,7 +27,6 @@ export default function Authors() {
   };
 
   const [state, dispatch] = useReducer(reducer, initialState);
-  console.log("state: ", state);
 
   function reducer(state: Params, action: DispatchQuotesAndAuthors) {
     return {
@@ -61,35 +59,7 @@ export default function Authors() {
 
         <article className="flex flex-wrap justify-center gap-8">
           {authors.data.map((author, index) => {
-            const findIndexLanguage = author.translations.findIndex(
-              (translation) => translation.language.code === state.language ?? "en"
-            );
-
-            return (
-              <div
-                key={index}
-                className="group flex flex-col items-center bg-blue-200 p-4  rounded-lg duration-300 hover:bg-blue-300"
-              >
-                <Link href={ROUTES.AUTHOR(author.englishName)} className="text-2xl">
-                  {author.translations[findIndexLanguage].name}
-                </Link>
-
-                <small>
-                  ({author.quotes.length} {author.quotes.length === 1 ? "quote" : "quotes"})
-                </small>
-
-                <div className="flex items-center justify-center w-4/5 h-full rounded-lg overflow-hidden mt-2">
-                  <AuthorImg author={author.englishName} />
-                </div>
-
-                <Link
-                  href={`/authors/${author.englishName}`}
-                  className="bg-[#5bff76] text-sm font-medium p-2 rounded duration-300 mt-2 group-hover:bg-[#21cf3e]"
-                >
-                  VIEW INFOS
-                </Link>
-              </div>
-            );
+            return <AuthorCard key={index} author={author} state={state} />;
           })}
         </article>
 

@@ -195,14 +195,6 @@ function Tags({ translations, state, dispatch }: TagsProps) {
 
       <SelectedTags state={state} dispatch={dispatch} />
 
-      {/* <option value="life">Life</option>
-        <option value="science">Science</option>
-        <option value="philosophy">Philosophy</option>
-        <option value="religion">Religion</option>
-        <option value="politics">Politics</option>
-        <option value="humor">Humor</option>
-        <option value="money">Money</option> */}
-
       <p>{`You don't find the right one?`}</p>
 
       <AddBtn text="Suggest a tag" addFunction={() => console.log("Add tag")} />

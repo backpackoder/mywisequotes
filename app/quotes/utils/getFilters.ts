@@ -1,6 +1,8 @@
 // Types
 import { Filter, QuoteKeyOf, QuoteTranslationKeyOf } from "@/types/getFilters";
+import { LANGUAGES } from "@/types/languages";
 import { PrismaTag } from "@/types/prisma";
+import { Language } from "@prisma/client";
 
 type GetFiltersProps = {
   tags: PrismaTag[];
@@ -36,7 +38,7 @@ export function getFilters({ tags }: GetFiltersProps) {
     },
   };
 
-  const order: Filter<string> = {
+  const order: Filter<"asc" | "desc"> = {
     title: "order",
     label: "Order by",
     values: {
@@ -63,7 +65,20 @@ export function getFilters({ tags }: GetFiltersProps) {
     },
   };
 
-  const FILTERS = [limit, sortBy, order, tagsFilter];
+  const language: Filter<Language["code"]> = {
+    title: "language",
+    label: "Language",
+    values: {
+      default: { value: "en", label: "English" },
+      others: [
+        ...LANGUAGES.map((language) => {
+          return { value: language.code, label: language.nativeName };
+        }),
+      ],
+    },
+  };
+
+  const FILTERS = [limit, sortBy, order, tagsFilter, language];
 
   return FILTERS;
 }

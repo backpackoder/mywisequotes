@@ -7,6 +7,7 @@ import { QuoteItem } from "../quotes/QuoteItem";
 
 // Utils
 import { authOptions } from "@/utils/authOptions";
+import { languageIndexFinder } from "@/utils/languageIndexFinder";
 
 // Commons
 import { ROUTES } from "@/commons/commons";
@@ -15,7 +16,7 @@ import { ROUTES } from "@/commons/commons";
 import { prisma } from "@/lib/prisma";
 import { WikiAuthorDatas } from "@/app/authors/[slug]/page";
 import { User } from "@prisma/client";
-import { API } from "@/types/prisma";
+import { API, PrismaAuthor } from "@/types/prisma";
 
 type AuthorTemplateProps = {
   slugWithSpaces: string;
@@ -41,34 +42,50 @@ export async function AuthorTemplate({ slugWithSpaces, wikiData }: AuthorTemplat
     },
     include: {
       quotes: true,
-      translations: true,
+      translations: {
+        select: {
+          name: true,
+          description: true,
+          bio: true,
+
+          language: {
+            select: {
+              code: true,
+            },
+          },
+        },
+      },
     },
   });
 
-  const authorTranslation = await prisma.authorTranslation.findFirst({
-    where: {
-      author: {
-        englishName: slugWithSpaces,
-      },
-      language: {
-        code: user?.language === "" ? "en" : user?.language,
-      },
-    },
-  });
+  const findIndexLanguage =
+    user && author
+      ? languageIndexFinder({
+          data: author.translations,
+          values: ["language", "code"],
+          search: user.language === "" ? "en" : user.language,
+        })
+      : 0;
+
+  const name =
+    findIndexLanguage === -1 ? author?.englishName : author?.translations[findIndexLanguage].name;
+  const description =
+    findIndexLanguage === -1 ? "" : author?.translations[findIndexLanguage].description;
+  const bio = findIndexLanguage === -1 ? "" : author?.translations[findIndexLanguage].bio;
 
   return (
-    authorTranslation && (
+    author && (
       <>
-        <h2 className="text-5xl">{authorTranslation?.name}</h2>
+        <h2 className="text-5xl">{name}</h2>
 
         <AuthorImg author={slugWithSpaces} />
 
-        <h3 className="text-lg">{authorTranslation?.description}</h3>
+        <h3 className="text-lg">{description}</h3>
 
         <p>
-          {authorTranslation.bio}{" "}
+          {bio}{" "}
           <a
-            href={author?.wikipediaLink ?? wikiData?.wikipediaLink.desktop}
+            href={author.wikipediaLink ?? wikiData?.wikipediaLink?.desktop}
             target="_blank"
             className="text-blue-500 hover:text-blue-800"
           >
@@ -89,7 +106,7 @@ export async function AuthorTemplate({ slugWithSpaces, wikiData }: AuthorTemplat
         {
           <>
             {/* @ts-expect-error Async Server Component */}
-            <QuotesOfTheAuthor authorName={slugWithSpaces} user={user} />
+            <QuotesOfTheAuthor author={author} authorName={name} user={user} />
           </>
         }
       </>
@@ -98,42 +115,21 @@ export async function AuthorTemplate({ slugWithSpaces, wikiData }: AuthorTemplat
 }
 
 type QuotesOfTheAuthorProps = {
+  author: API<PrismaAuthor>;
   authorName: string;
   user: API<User>;
 };
 
-async function QuotesOfTheAuthor({ authorName, user }: QuotesOfTheAuthorProps) {
-  const author = await prisma.author.findFirst({
-    where: {
-      englishName: authorName,
-    },
-    include: {
-      quotes: true,
-      translations: true,
-    },
-  });
-  console.log("authorauthorauthor", author);
-
-  console.log("useruseruser", user);
-
-  const authorTranslation = await prisma.authorTranslation.findFirst({
-    where: {
-      language: {
-        code: user?.language ?? "en",
-      },
-    },
-  });
-  console.log("authorTranslationauthorTranslationauthorTranslation", authorTranslation);
-
+async function QuotesOfTheAuthor({ author, authorName, user }: QuotesOfTheAuthorProps) {
   return (
     author && (
       <div className="flex flex-col gap-4 w-full">
         <h3 className=" text-xl">
           {author.quotes.length > 0
-            ? `${author.quotes.length} ${author.quotes.length === 1 ? "quote" : "quotes"} from ${
-                author.translations[0].name
-              }:`
-            : `No quotes found from ${author.translations[0].name}`}
+            ? `${author.quotes.length} ${
+                author.quotes.length === 1 ? "quote" : "quotes"
+              } from ${authorName}:`
+            : `No quotes found from ${authorName}`}
         </h3>
 
         {author.quotes.map((quote, index) => {
