@@ -17,7 +17,7 @@ import { AuthorFound } from "./AuthorFound";
 import { SubmitBtn } from "@/components/SubmitBtn";
 
 // Types
-import { EditorProps } from "../types";
+import { EditorProps } from "../../types";
 
 export function Editor({
   translations,
@@ -50,6 +50,7 @@ export function Editor({
         return (
           <>
             <Preview state={state} />
+
             <EditorWrapper
               LanguageComponent={
                 <Language translations={translations} state={state} dispatch={dispatch} />

@@ -3,34 +3,28 @@
 import { useMemo, useState } from "react";
 
 // Types
-import { User, UserSettings } from "@prisma/client";
+import { User } from "@prisma/client";
 
 type UserDataEditorProps = {
   type?: keyof User;
-  typeSettings?: keyof UserSettings;
   user?: User;
-  userSettings?: UserSettings;
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
   handleModifiedData: () => void;
 };
 
 export function UserDataEditor({
   type,
-  typeSettings,
   user,
-  userSettings,
   setIsEditing,
   handleModifiedData,
 }: UserDataEditorProps) {
   function getType() {
     if (type && user) return type;
-    if (typeSettings && userSettings) return typeSettings;
     return "";
   }
 
   function getUserData() {
     if (type && user) return user?.[type];
-    if (typeSettings && userSettings) return userSettings?.[typeSettings];
     return "";
   }
   const data = getUserData();

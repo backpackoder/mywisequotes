@@ -5,7 +5,7 @@ import { useEffect, useReducer, useState } from "react";
 
 // Components
 import { AuthCheck } from "@/components/AuthCheck";
-import { Editor } from "./editor";
+import { Editor } from "./components/editor";
 
 // Utils
 import { getWikiData } from "@/utils/getWikiData";
@@ -23,7 +23,6 @@ export default function AddAuthor() {
   const [translations, setTranslations] = useState<API<ManyData<PrismaLanguage>>>(null);
 
   const [state, dispatch] = useReducer<React.Reducer<State, Action>>(reducer, initialState);
-  console.log("state", state);
 
   function reducer(state: State, action: Action): State {
     switch (action.type) {

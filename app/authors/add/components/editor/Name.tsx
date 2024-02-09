@@ -1,9 +1,9 @@
-import { EditorProps } from "../types";
+import { EditorProps } from "../../types";
 
 export function Name({ translations, state, dispatch }: EditorProps) {
-  const { language, names } = state;
+  const { names } = state;
 
-  const nameIndexFinder = translations?.findIndex((translation) => translation.code === language);
+  const nameIndexFinder = state.names?.findIndex((name) => name.code === state.language);
 
   function handleName(e: React.ChangeEvent<HTMLTextAreaElement>) {
     if (state.names && nameIndexFinder !== undefined && nameIndexFinder > -1) {
@@ -26,7 +26,7 @@ export function Name({ translations, state, dispatch }: EditorProps) {
         <label htmlFor="content">
           Write the author{"'"}s name in{" "}
           <span className="font-semibold">
-            {translations[nameIndexFinder].englishName.toLowerCase()}
+            {translations[nameIndexFinder]?.englishName.toLowerCase()}
           </span>{" "}
           here
           <br />
@@ -38,7 +38,7 @@ export function Name({ translations, state, dispatch }: EditorProps) {
           cols={30}
           rows={1}
           placeholder="Albert Einstein"
-          value={names?.[nameIndexFinder].name}
+          value={names?.[nameIndexFinder]?.name}
           maxLength={200}
           className="p-2 border border-black rounded-xl"
           onChange={(e) => handleName(e)}

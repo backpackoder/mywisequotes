@@ -1,11 +1,9 @@
 // Components
 import { PreviewWrapper } from "@/components/add/PreviewWrapper";
 import { AuthorWrapper } from "@/components/authors/AuthorWrapper";
-import { AuthorTemplate } from "@/components/authors/AuthorTemplate";
 
 // Types
-import { State } from "./types";
-import { WikiAuthorDatas } from "../[slug]/page";
+import { State } from "../types";
 import { AuthorImg } from "@/components/quotes/AuthorImg";
 
 type PreviewProps = {
@@ -15,17 +13,6 @@ type PreviewProps = {
 export function Preview({ state }: PreviewProps) {
   const { wikiData } = state;
 
-  const datas: WikiAuthorDatas = {
-    name: wikiData?.title ?? "",
-    description: wikiData?.description ?? "",
-    bio: wikiData?.extract ?? "",
-    wikipediaLink: {
-      desktop: wikiData?.content_urls?.desktop.page,
-      mobile: wikiData?.content_urls?.mobile.page,
-    },
-    imageSrc: wikiData?.originalimage?.source,
-  };
-
   const actualLanguage = state.names.findIndex((name) => name.code === state.language);
 
   const isStatusValid = state.status === "valid";
@@ -33,18 +20,24 @@ export function Preview({ state }: PreviewProps) {
   return (
     <PreviewWrapper>
       <AuthorWrapper>
-        <h2 className="text-5xl">{wikiData?.title}</h2>
+        <h2 className="text-5xl">
+          {isStatusValid
+            ? state.names[actualLanguage]?.name !== ""
+              ? state.names[actualLanguage]?.name
+              : wikiData?.title
+            : wikiData?.title}
+        </h2>
 
         <AuthorImg author={wikiData?.title} />
 
         <h3 className="text-lg">
           {isStatusValid
             ? state?.descriptions[actualLanguage]?.description
-            : state.wikiData?.description}{" "}
+            : state.wikiData?.description}
         </h3>
 
         <p>
-          {isStatusValid ? state.bio[actualLanguage].bio : state.wikiData?.extract}{" "}
+          {isStatusValid ? state.bio[actualLanguage]?.bio : state.wikiData?.extract}
           <a
             href={wikiData?.content_urls.desktop.page}
             target="_blank"

@@ -47,4 +47,14 @@ export type CreateAuthorClientSide = {
     bio: string;
   }[];
 };
+export type UpdateAuthorClientSide = {
+  englishName: string;
+  translations: {
+    translationId: string;
+    isOriginal: boolean;
+    name: string;
+    description: string;
+    bio: string;
+  }[];
+};
 export type Status = null | "searching" | "found" | "not found" | "exists" | "valid" | "submitted";

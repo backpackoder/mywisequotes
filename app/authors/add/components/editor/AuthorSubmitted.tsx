@@ -5,20 +5,21 @@ import { Dispatch } from "react";
 import { ROUTES } from "@/commons/commons";
 
 // Types
-import { Action, State } from "../types";
+import { Action, State } from "../../types";
 
 type AuthorSubmittedProps = {
   state: State;
   dispatch: Dispatch<Action>;
+  text?: string;
 };
 
-export function AuthorSubmitted({ state, dispatch }: AuthorSubmittedProps) {
+export function AuthorSubmitted({ state, dispatch, text = "submitted" }: AuthorSubmittedProps) {
   return state?.wikiData ? (
     <div className="flex flex-col items-center justify-center gap-4">
       <p>
         The author {'"'}
         {state.wikiData.title}
-        {'"'} has been submitted succesfully!
+        {'"'} has been {text} succesfully!
       </p>
 
       <div className="flex flex-wrap items-center justify-center gap-4">

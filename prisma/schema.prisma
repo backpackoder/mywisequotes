@@ -58,8 +58,8 @@ model User {
   bio           String?   @db.Text
   nationality   String?
   role          Role      @default(USER)
-  emailUpdates  Boolean  @default(false)
-  language      String   @default("en")
+  emailUpdates  Boolean   @default(false)
+  language      String    @default("")
 
   accounts      Account[]
   sessions      Session[]
@@ -261,7 +261,7 @@ model Language {
   code            String   @unique
   englishName     String   @unique
   nativeName      String
-
+  
   quotes          QuoteTranslation[]
   tags            TagTranslation[]
   authors         AuthorTranslation[]

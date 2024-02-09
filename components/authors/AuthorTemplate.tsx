@@ -1,4 +1,5 @@
 import { getServerSession } from "next-auth";
+import Link from "next/link";
 
 // Components
 import { AuthorImg } from "../quotes/AuthorImg";
@@ -7,9 +8,14 @@ import { QuoteItem } from "../quotes/QuoteItem";
 // Utils
 import { authOptions } from "@/utils/authOptions";
 
+// Commons
+import { ROUTES } from "@/commons/commons";
+
 // Types
 import { prisma } from "@/lib/prisma";
 import { WikiAuthorDatas } from "@/app/authors/[slug]/page";
+import { User } from "@prisma/client";
+import { API } from "@/types/prisma";
 
 type AuthorTemplateProps = {
   slugWithSpaces: string;
@@ -23,7 +29,7 @@ export async function AuthorTemplate({ slugWithSpaces, wikiData }: AuthorTemplat
     .findUnique({ where: { email: session?.user?.email ?? "" } })
     .then((user) => user?.id ?? "");
 
-  const user = await prisma.user.findUnique({
+  const user: API<User> = await prisma.user.findUnique({
     where: {
       id: currentUserId,
     },
@@ -45,7 +51,7 @@ export async function AuthorTemplate({ slugWithSpaces, wikiData }: AuthorTemplat
         englishName: slugWithSpaces,
       },
       language: {
-        code: user?.language ?? "en",
+        code: user?.language === "" ? "en" : user?.language,
       },
     },
   });
@@ -70,10 +76,20 @@ export async function AuthorTemplate({ slugWithSpaces, wikiData }: AuthorTemplat
           </a>
         </p>
 
+        <Link
+          href={{
+            pathname: ROUTES.AUTHOR_EDIT(slugWithSpaces),
+            query: `author=${author?.englishName}&id=${author?.id}`,
+          }}
+          className="bg-blue-500 text-white p-2 rounded-lg duration-300 hover:bg-blue-700"
+        >
+          Edit
+        </Link>
+
         {
           <>
             {/* @ts-expect-error Async Server Component */}
-            <QuotesOfTheAuthor authorName={slugWithSpaces} />
+            <QuotesOfTheAuthor authorName={slugWithSpaces} user={user} />
           </>
         }
       </>
@@ -83,9 +99,10 @@ export async function AuthorTemplate({ slugWithSpaces, wikiData }: AuthorTemplat
 
 type QuotesOfTheAuthorProps = {
   authorName: string;
+  user: API<User>;
 };
 
-async function QuotesOfTheAuthor({ authorName }: QuotesOfTheAuthorProps) {
+async function QuotesOfTheAuthor({ authorName, user }: QuotesOfTheAuthorProps) {
   const author = await prisma.author.findFirst({
     where: {
       englishName: authorName,
@@ -95,6 +112,18 @@ async function QuotesOfTheAuthor({ authorName }: QuotesOfTheAuthorProps) {
       translations: true,
     },
   });
+  console.log("authorauthorauthor", author);
+
+  console.log("useruseruser", user);
+
+  const authorTranslation = await prisma.authorTranslation.findFirst({
+    where: {
+      language: {
+        code: user?.language ?? "en",
+      },
+    },
+  });
+  console.log("authorTranslationauthorTranslationauthorTranslation", authorTranslation);
 
   return (
     author && (

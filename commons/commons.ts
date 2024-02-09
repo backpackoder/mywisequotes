@@ -1,5 +1,12 @@
 // Assets
 import NO_PROFILE_IMAGE from "@/app/assets/images/no-profile-image.jpg";
+import { AuthorKeyOf } from "@/types/getFilters";
+import {
+  PrismaAuthor,
+  PrismaAuthorTranslation,
+  PrismaQuote,
+  PrismaQuoteTranslation,
+} from "@/types/prisma";
 
 // MAIN
 export const TITLE = "My wise quotes";
@@ -63,9 +70,18 @@ export const API_URL = {
 // Prisma
 export const PRISMA = {};
 
-// Filters
-export const FILTERS = {
-  DEFAULT: "by-default",
+type FILTERSType = {
+  [key: string]: "default" | AuthorKeyOf;
+  NAME: AuthorKeyOf;
+};
+
+export const FILTERS: FILTERSType = {
+  DEFAULT: "default",
+  NAME: "englishName",
+  CREATED_AT: "createdAt",
+  UPDATED_AT: "updatedAt",
+  QUOTES_COUNT: "quotes",
+  TRANSLATIONS: "translations",
 };
 
 // Images

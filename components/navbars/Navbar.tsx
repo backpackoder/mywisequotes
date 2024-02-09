@@ -5,16 +5,18 @@ import { useEffect, useState } from "react";
 // Components
 import { Searchbar } from "../Searchbar";
 
-// Utils
-import { getFilters } from "@/utils/getFilters";
-
 // Types
 import { NavbarProps } from "@/types/props";
 import { API, ManyData, PrismaTag } from "@/types/prisma";
+import { getFilters as getFiltersAuthors } from "@/app/authors/utils/getFilters";
+import { getFilters as getFiltersQuotes } from "@/app/quotes/utils/getFilters";
 
 export function Navbar({ type, totalCount, dispatch }: NavbarProps) {
   const [tags, setTags] = useState<API<ManyData<PrismaTag>>>(null);
-  const filters = tags && getFilters({ type, tags: tags.data });
+  
+  const filtersAuthors = tags && getFiltersAuthors();
+  const filtersQuotes = tags && getFiltersQuotes({ tags: tags.data });
+  const filters = type === "authors" ? filtersAuthors : filtersQuotes;
 
   function handleSelectChange(e: React.ChangeEvent<HTMLSelectElement>, title: string) {
     dispatch({ type: title, payload: e.target.value });

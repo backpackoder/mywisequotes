@@ -7,7 +7,7 @@ import { Dispatch, useEffect, useState } from "react";
 import { getWikiData } from "@/utils/getWikiData";
 
 // Types
-import { Action, State } from "../types";
+import { Action, State } from "../../types";
 import { Author } from "@prisma/client";
 
 type FindAuthorOnWikipediaProps = {

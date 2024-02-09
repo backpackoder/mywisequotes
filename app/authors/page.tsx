@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 
 // Components
 import { Navbar } from "@/components/navbars/Navbar";
@@ -9,7 +9,7 @@ import { Pagination } from "@/components/Pagination";
 import { AuthorImg } from "@/components/quotes/AuthorImg";
 
 // Commons
-import { FILTERS } from "@/commons/commons";
+import { FILTERS, ROUTES } from "@/commons/commons";
 
 // Types
 import { Params } from "@/types/params";
@@ -19,17 +19,16 @@ import { DispatchQuotesAndAuthors } from "@/types/authors";
 export default function Authors() {
   const [authors, setAuthors] = useState<API<ManyData<PrismaAuthor>>>(null);
 
-  const params: Params = useMemo(() => {
-    return {
-      page: 1,
-      limit: 20,
-      sortBy: FILTERS.DEFAULT,
-      order: "asc",
-      language: "en",
-    };
-  }, []);
+  const initialState: Params = {
+    page: 1,
+    limit: 20,
+    sortBy: FILTERS.NAME,
+    order: "asc",
+    language: "en",
+  };
 
-  const [state, dispatch] = useReducer(reducer, params);
+  const [state, dispatch] = useReducer(reducer, initialState);
+  console.log("state: ", state);
 
   function reducer(state: Params, action: DispatchQuotesAndAuthors) {
     return {
@@ -40,7 +39,7 @@ export default function Authors() {
 
   useEffect(() => {
     async function fetchAuthors() {
-      const res = await fetch(`api/authors/queries/${Object.values(params).join("/")}`, {
+      const res = await fetch(`api/authors/queries/${Object.values(state).join("/")}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -51,7 +50,7 @@ export default function Authors() {
     }
 
     fetchAuthors();
-  }, [params]);
+  }, [state]);
 
   return (
     authors && (
@@ -71,7 +70,7 @@ export default function Authors() {
                 key={index}
                 className="group flex flex-col items-center bg-blue-200 p-4  rounded-lg duration-300 hover:bg-blue-300"
               >
-                <Link href={`/authors/${author.englishName}`} className="text-2xl">
+                <Link href={ROUTES.AUTHOR(author.englishName)} className="text-2xl">
                   {author.translations[findIndexLanguage].name}
                 </Link>
 
@@ -80,7 +79,7 @@ export default function Authors() {
                 </small>
 
                 <div className="flex items-center justify-center w-4/5 h-full rounded-lg overflow-hidden mt-2">
-                  <AuthorImg author={author.translations[0].name} />
+                  <AuthorImg author={author.englishName} />
                 </div>
 
                 <Link

@@ -1,10 +1,10 @@
 // Types
-import { EditorProps } from "../types";
+import { EditorProps } from "../../types";
 
 export function Bio({ translations, state, dispatch }: EditorProps) {
-  const { language, bio } = state;
+  const { bio } = state;
 
-  const bioIndexFinder = translations?.findIndex((translation) => translation.code === language);
+  const bioIndexFinder = state.bio?.findIndex((bio) => bio.code === state.language);
 
   function handleBio(e: React.ChangeEvent<HTMLTextAreaElement>) {
     if (state.bio && bioIndexFinder !== undefined && bioIndexFinder > -1) {
@@ -27,7 +27,7 @@ export function Bio({ translations, state, dispatch }: EditorProps) {
         <label htmlFor="content">
           Write the author{"'"}s bio in{" "}
           <span className="font-semibold">
-            {translations[bioIndexFinder].englishName.toLowerCase()}
+            {translations[bioIndexFinder]?.englishName.toLowerCase()}
           </span>{" "}
           here:
         </label>

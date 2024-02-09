@@ -2,10 +2,11 @@
 import { AddBtn } from "@/components/buttons/AddBtn";
 
 // Types
-import { EditorProps } from "../types";
+import { EditorProps } from "../../types";
 
 export function Language({ translations, state, dispatch }: EditorProps) {
   const { language, originalLanguage } = state;
+  console.log("translations in Language", translations);
 
   return (
     <div className="flex flex-col items-center h-full gap-2 shadow-md">

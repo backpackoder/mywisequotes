@@ -23,7 +23,6 @@ export function Searchbar({ type }: SearchbarProps) {
   };
 
   const [state, dispatch] = useReducer(reducer, params);
-  console.log("state", state);
 
   function reducer(state: Params, action: DispatchQuotesAndAuthors) {
     return {

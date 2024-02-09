@@ -35,6 +35,13 @@ export async function GET(req: Request, { params }: { params: { queries: string[
 
     include: PRISMA_CALLS.authors.include,
 
+    orderBy: {
+      // [sortBy]: sortBy === "quotes" ? { quotes: { _count: "asc" } } : order,
+      [sortBy]: order,
+    },
+
+    skip: (Number(page) - 1) * Number(limit),
+
     take: Number(limit),
   });
 
