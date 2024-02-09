@@ -74,7 +74,7 @@ function LanguageAndContent({ translations, state, dispatch }: LanguageAndConten
                 } p-2 border border-black rounded-xl`}
                 onClick={() => dispatch({ type: "SET_LANGUAGE", payload: translation.code })}
               >
-                {translation.name}
+                {translation.englishName}
               </button>
 
               <button
@@ -100,7 +100,7 @@ function LanguageAndContent({ translations, state, dispatch }: LanguageAndConten
       <div className="flex flex-col items-center h-full gap-2">
         <label htmlFor="content">
           Write your quote in{" "}
-          <span className="font-semibold">{translations[0].name.toLowerCase()}</span> here:
+          <span className="font-semibold">{translations[0].englishName.toLowerCase()}</span> here:
         </label>
 
         <textarea
