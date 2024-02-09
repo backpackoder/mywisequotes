@@ -3,6 +3,7 @@ import { Items } from "./navbar";
 import { DispatchQuotesAndAuthors } from "./authors";
 import { User } from "@prisma/client";
 import { PrismaAuthor, PrismaQuote } from "./prisma";
+import { StaticImageData } from "next/image";
 
 // LAYOUT
 export type LayoutProps = {
@@ -86,7 +87,7 @@ export type UserProfilePartsProps = {
   data: {
     username: string;
     name: string;
-    image: string;
+    image: string | StaticImageData;
     bio: string;
     nationality: string;
     role: JSX.Element | null;
