@@ -1,30 +1,31 @@
 "use client";
 
 import Link from "next/link";
-import React, { useEffect, useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 
 // Components
 import { NoResultsFound } from "./NoResultsFound";
 
 // Types
 import { SearchbarProps } from "@/types/searchbar";
-import { Params } from "@/types/params";
 import { DispatchQuotesAndAuthors } from "@/types/authors";
 import { API, ManyData, PrismaAuthor, PrismaQuote } from "@/types/prisma";
 
 export function Searchbar({ type }: SearchbarProps) {
   const [searchQuote, setSearchQuote] = useState<API<ManyData<PrismaQuote>> | null>(null);
   const [searchAuthor, setSearchAuthor] = useState<API<ManyData<PrismaAuthor>> | null>(null);
-  console.log("searchQuote", searchQuote);
-  console.log("searchAuthor", searchAuthor);
 
-  const params: Params = {
+  type InitialStateProps = {
+    query: string;
+  };
+
+  const initialState: InitialStateProps = {
     query: "",
   };
 
-  const [state, dispatch] = useReducer(reducer, params);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
-  function reducer(state: Params, action: DispatchQuotesAndAuthors) {
+  function reducer(state: InitialStateProps, action: DispatchQuotesAndAuthors) {
     return {
       ...state,
       [action.type]: action.payload,
@@ -59,7 +60,7 @@ export function Searchbar({ type }: SearchbarProps) {
     }
 
     state.query !== "" && (type === "quotes" ? fetchQuotes() : fetchAuthors());
-  }, [params.query, state, type]);
+  }, [state, type]);
 
   return (
     <div className="relative flex flex-col items-center justify-between gap-2 p-2 z-10">
@@ -111,9 +112,6 @@ function SearchAuthor({
   type: string;
   searchAuthor: ManyData<PrismaAuthor>;
 }) {
-  console.log("searchAuthor.count", searchAuthor.count);
-  console.log("searchAuthor.data", searchAuthor.data);
-
   return searchAuthor.count > 0 ? (
     <>
       {searchAuthor.data.map((author, index) => {
