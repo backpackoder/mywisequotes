@@ -4,6 +4,7 @@ import { AuthorNotFound } from "@/components/authors/AuthorNotFound";
 import { slugWithSpacesHandle } from "@/utils/slugWithSpacesHandle";
 import { getWikiData } from "@/utils/getWikiData";
 import { WikiAuthorDatas } from "./page";
+import { AuthorTemplate } from "@/components/authors/AuthorTemplate";
 
 export default async function Author({ params }: { params: { slug: string } }) {
   const { slug } = params;
@@ -37,8 +38,7 @@ export default async function Author({ params }: { params: { slug: string } }) {
       {author ? (
         <>
           {/* @ts-expect-error Async Server Component */}
-          {/* <AuthorTemplate slugWithSpaces={slugWithSpaces} wikiData={datas} /> */}
-          hey
+          <AuthorTemplate slugWithSpaces={slugWithSpaces} wikiData={datas} />
         </>
       ) : (
         <AuthorNotFound authorName={slugWithSpaces} />
